@@ -1,0 +1,85 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Romario Newell Shopping Site</title>
+
+    @Styles.Render("~/Content/tagsinput")
+    @Styles.Render("~/Content/css")
+    @Styles.Render("~/Content/dashboard")
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/Scripts/multiselect")
+    @Scripts.Render("~/Scripts/multiselect-min")
+    @Scripts.Render("~/Scripts/bundle")
+    @Styles.Render("~/Content/PagedList")
+    @Styles.Render("~/Content/tag")
+    @Scripts.Render("~/Scripts/tagsinput")
+
+
+    <style>
+        .white > a {
+            color: white;
+        }
+
+        .hover:hover {
+            background-color: #E5315B;
+            color: whitesmoke;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap shadow">
+        <div class="col-sm-3 col-md-2 mr-0">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span><img src="~/Icons/admin.svg" style="width: 1.5em;" /></span>
+            </button>
+        </div>
+     
+        <ul class="navbar-nav px-3">
+            <li class="nav-item text-nowrap">
+                @if (Request.IsAuthenticated)
+                 {
+                   using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm" }))
+                    {
+                        Html.AntiForgeryToken();
+                        <a href="javascript:document.getElementById('logoutForm').submit()" class="active nav-item nav-link">Sign Out</a>
+                    }
+                }
+            </li>
+        </ul>
+    </nav>
+    <div class="container-fluid collapse text-white"   id="navbarToggleExternalContent">
+        <div class="row">
+            <nav class="col-md-2 d-none d-md-block bg-light sidebar bg-dark">
+                <div class="sidebar-sticky">
+                    <ul class="nav flex-column">
+                        @Html.ActionLink("Home", "Index", "Admin",new { area = "" } ,new { @class = "nav-item nav-link text-white hover" })
+                        @Html.ActionLink("Products", "Index", "Products", null, new { @class = "nav-item nav-link text-white hover" })
+                        @Html.ActionLink("Categories", "Index", "Categories", null, new { @class = "nav-item nav-link text-white hover" })
+                        @Html.ActionLink("Profile Details", "Details", "User", null, new { @class = "nav-item nav-link text-white hover" })
+                        @Html.ActionLink("Manage Acount", "Index", "Manage", null, new { @class = "nav-tiem nav-link text-white hover" })
+                        @Html.ActionLink("Users", "ListUsers", "Admin", null, new { @class = "nav-item nav-link text-white hover" })
+                        @Html.ActionLink("Roles", "ListRoles", "Admin", null, new { @class = "nav-item nav-link text-white hover" })
+                        @Html.ActionLink("Orders", "#", "#", null, new { @class = "nav-item nav-link text-white hover" })
+                        @Html.ActionLink("About", "About", "Home", null, new { @class = "nav-item nav-link text-white hover" })
+                        @Html.ActionLink("Contact", "Contact", "Home", null, new { @class = "nav-item nav-link text-white hover" })
+                    </ul>
+                </div>
+            </nav>
+        </div>
+      </div>
+            <div class="container body-content">
+                @RenderBody()
+                <hr />
+                <footer>
+                    <p>&copy; @DateTime.Now.Year - Romario Newell</p>
+                </footer>
+            </div>
+</body>
+@Scripts.Render("~/bundles/jquery")
+@Scripts.Render("~/bundles/bootstrap")
+@RenderSection("scripts", required: false)
+</html>
+

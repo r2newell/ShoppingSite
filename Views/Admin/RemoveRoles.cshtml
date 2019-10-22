@@ -1,0 +1,37 @@
+﻿@model EC.Models.UserRoles
+
+@{
+    ViewBag.Title = "RemoveRoles";
+    Layout = "~/Views/Admin/Shared/_AdminLayout.cshtml";
+    var Email = ViewBag.Email;
+}
+
+<hr />
+<h2  class="h2 text-danger">Remove Roles</h2>
+<hr />
+
+
+
+<div>
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        @Html.HiddenFor(model => model.Email, new { htmlAttributes = new { @class = "form-control", @value = Email } })
+        <div class="form-group">
+            <select name="Roles" class="form-control" data-role="select-dropdown" required multiple>
+                @{
+                    foreach (string role in (List<string>)ViewBag.roles)
+                    {
+                        <option value="@role">@role</option>
+                    }
+                }
+            </select>
+        </div>
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-danger" /> |
+            <div class="btn btn-primary white">@Html.ActionLink("Back to List", "Index") </div>
+        </div>
+    }
+</div>
+

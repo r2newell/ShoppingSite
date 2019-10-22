@@ -1,0 +1,61 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Romario Newell Shopping Site</title>
+    @Styles.Render("~/Content/css")
+    @Styles.Render("~/Content/navbar")
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/Scripts/multiselect")
+    @Scripts.Render("~/Scripts/multiselect-min")
+    @Styles.Render("~/Content/PagedList")
+    @Scripts.Render("~/Scripts/bundle")
+    
+
+    <style>
+        .white > a {
+            color: white;
+        }
+
+        .white:hover > a:hover {
+            text-decoration: none;
+        }
+    </style>
+
+</head>
+<body>
+    <nav class="navbar navbar-expand-sm navbar-dark bg-dark fixed-top">
+        @Html.ActionLink("Romario Newell", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample03" aria-controls="navbarsExample03" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarsExample03">
+            <ul class="navbar-nav mr-auto">
+                @Html.ActionLink("Home", "Index", "Home", new { area = "" }, new { @class = "nav-item nav-link active" })
+                @Html.Partial("_LoginPartial")
+                <li class="nav-item dropdown">
+                    <a class="nav-link active dropdown-toggle" href="#" id="dropdown03" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More</a>
+                    <div class="dropdown-menu" aria-labelledby="dropdown03">
+                        @Html.ActionLink("About", "About", "Home", null, new { @class = "dropdown-item" })
+                        @Html.ActionLink("Contact", "Contact", "Home", null, new { @class = "dropdown-item" })
+                    </div>
+                </li>
+                <li>@Html.Partial("_SettingsPartial")</li>
+            </ul>
+        </div>
+        @Html.Partial("_UserPartial")
+    </nav>
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+        <footer>
+            <p>&copy; @DateTime.Now.Year - Romario Newell</p>
+        </footer>
+    </div>
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+</body>
+</html>

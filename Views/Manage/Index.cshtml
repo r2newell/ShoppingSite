@@ -1,0 +1,73 @@
+﻿@model EC.Models.IndexViewModel
+@{
+    ViewBag.Title = "Accoount Settings";
+}
+<hr />
+<h2>@ViewBag.Title.</h2>
+<hr />
+<p class="h1">@ViewBag.StatusMessage</p>
+
+<table class="table table-dark table-hover table-active table-responsive">
+    <tr>
+        <td>Password</td>
+        <td>
+            @if (Model.HasPassword)
+            {
+                @Html.ActionLink("Change", "ChangePassword", null,new {@class="btn btn-primary white"})
+            }
+            else
+            {
+                @Html.ActionLink("Create", "SetPassword", null,new {@class="btn btn-primary white"})
+            }
+        </td>
+    </tr>
+    <tr>
+        <td>Phone</td>
+        <td>
+            @if (Model.PhoneNumber != null)
+            {
+                @Html.ActionLink("Change", "AddPhoneNumber")
+                using (Html.BeginForm("Remove", "Manage", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <input type="submit" value="Remove" class="btn btn-primary white" />
+                }
+            }
+            else
+            {
+                @Html.ActionLink("Add", "AddPhoneNumber",  null,new {@class="btn btn-primary white"})
+            }
+        </td>
+    </tr>
+    <tr>
+
+        <td>Two Factor Authorization</td>
+        <td>
+            @if (Model.TwoFactor)
+            {
+                using (Html.BeginForm("DisableTwoFactorAuthentication", "Manage", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <input type="submit" value="Disable" class="btn btn-primary white" />
+
+                }
+            }
+            else
+            {
+                using (Html.BeginForm("EnableTwoFactorAuthentication", "Manage", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <input type="submit" value="Enable" class="btn btn-primary   white" />
+
+                }
+            }
+        </td>
+    </tr>
+    <tr>
+        <td>Delete Account</td> <td> @Html.ActionLink("Delete", "Delete", "User",null, new { @class=" btn btn-danger white"})</td>
+    </tr>
+</table>
+            
+            
+       
+

@@ -1,0 +1,36 @@
+﻿@model EC.Models.User
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+
+    <div>
+        <hr />
+        <h4 class="h4">@Model.FirstName @Model.LastName</h4>
+        <hr />
+
+        <table class="table table-active table-dark table-hover table-responsive">
+            <tr>
+                <td>@Html.DisplayNameFor(model => model.FirstName)</td>
+                <td>@Html.DisplayFor(model => model.FirstName)</td>
+            </tr>
+            <tr>
+                <td>@Html.DisplayNameFor(model => model.LastName)</td>
+                <td>@Html.DisplayFor(model => model.LastName)</td>
+            </tr>
+            <tr>
+                <td>@Html.DisplayNameFor(model => model.Dob)</td>
+                <td>@Html.DisplayFor(model => model.Dob)</td>
+            </tr>
+            <tr>
+                <td>Age</td>
+                <td>@(@DateTime.Now.Year - @Model.Dob.Year)</td>
+            </tr>
+        </table>
+    </div>
+<p>
+    @Html.ActionLink("Edit", "Edit", "User",null, new { @class = "btn btn-primary white" }); 
+</p>

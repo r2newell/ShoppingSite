@@ -1,0 +1,24 @@
+﻿@model EC.Models.Category
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Admin/Shared/_AdminLayout.cshtml";
+}
+
+
+
+
+    
+    <table class="table table-hover table-responsive"  >
+        <tr>
+            <td class="h5">     @Html.DisplayNameFor(model => model.category_description)</td>
+            <td class="text-center">   @Html.DisplayFor(model => model.category_description)</td>
+        </tr>
+    </table>
+      
+   
+
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.CategoryID },  htmlAttributes: new { @class="btn btn-primary white"}) |
+    @Html.ActionLink("Back to List", "Index", null, htmlAttributes:  new { @class="btn btn-primary white"})
+</p>

@@ -1,0 +1,7 @@
+﻿@using EC.Models;
+
+@if(Session["User"]!= null)
+{
+    var user = (User)Session["User"];
+    <div class="text-white"> Bonjour  @user.FirstName @user.LastName!  </div>
+}

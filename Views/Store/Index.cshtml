@@ -1,0 +1,65 @@
+﻿@model IEnumerable<EC.Models.Product>
+
+@{
+    ViewBag.Title = "Product";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@Styles.Render("~/Content/grid")
+
+
+<hr />
+<div class="row">
+    @foreach (var product in Model)
+    {
+        <div class="col-sm-2">
+            <div class="card mb-4 text-white bg-dark" style="width: 18rem;">
+                <h5 class="card-header">
+                    @product.ProductName
+                </h5>
+                <img src="@Url.Content(product.ImagePath)" class="card-img-top" />
+                <div class="card-body collapse" id="collapseExample">
+                    <table class="table table-responsive table-borderless text-white">
+                        <tbody>
+                            <tr>
+                                <td class="card-text">Price</td>
+                                <td>@Html.DisplayFor(item => product.Price)</td>
+                            </tr>
+                            <tr>
+                                <td class="card-text">Quantity</td>
+                                @if (product.Quantity != 0)
+                                {
+                                    <td>@product.Quantity</td>
+                                }else
+                                {
+                                    <td>Out of Stock</td>
+                                }
+                            </tr>
+                            <tr>
+                                <td class="card-text">About</td>
+                                <td>@product.Description</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="card-footer text-muted">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-sm btn-outline-secondary text-white" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">View</button>
+                        @if(product.Quantity != 0)
+                        {
+                            <button type="button" class="btn btn-sm btn-outline-secondary white">@Html.ActionLink("Add to Cart", "AddToCart","Store",new { product = product})</button>
+                        }
+                        else
+                        {
+                            <button type="button" class="btn btn-sm btn-outline-secondary white">@Html.ActionLink("Add to Cart", "AddToCart",new { @class = "nav-item nav-link active" })</button>
+                        }
+                    </div>
+                </div>
+                </div>
+            </div>
+    }
+
+    </div>
+
+
+
