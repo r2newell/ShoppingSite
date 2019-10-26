@@ -1,0 +1,56 @@
+﻿@model  EC.Models.AddProducts
+
+@using EC.Models;
+
+@{
+    ViewBag.Title = "AddProducts";
+    Layout = "~/Views/Admin/Shared/_AdminLayout.cshtml";
+}
+
+<hr />
+<h2 class="h2">Add Categories</h2>
+<hr />
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="form-horizontal">
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.Label("Products", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+              
+                @Html.DropDownList(name: "ID" , selectList: (SelectList)ViewData["ProductId"], htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.ID, "", htmlAttributes: new { @class = "text-danger" })
+            </div>
+        </div>
+        @Html.HiddenFor(model => model.categories)
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.categories, htmlAttributes: new { @class = "control-label col-md-2" })
+            <select name="categories" class="form-control" data-role="select-dropdown" multiple>
+                @{
+                    foreach (var category in (Dictionary<int, Category>)Session["categories"])
+                    {
+                        <option value="@category.Key">@category.Value.Description</option>
+                    }
+                }
+            </select>
+        </div>
+
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </div>
+    </div>
+}
+
+<div class="btn btn-primary white">
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

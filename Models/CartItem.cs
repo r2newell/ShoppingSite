@@ -37,7 +37,6 @@ namespace EC.Models
         }
     }
 
-   
     public class ShoppingCart
     {
         [Key]

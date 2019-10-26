@@ -1,37 +1,54 @@
 ﻿@using Microsoft.AspNet.Identity.EntityFramework;
+@using PagedList.Mvc;
 
-@model IEnumerable<IdentityRole>
+@model  PagedList.IPagedList<IdentityRole>
 
 @{
     ViewBag.Title = "ListRoles";
-Layout = "~/Views/Admin/Shared/_AdminLayout.cshtml";
+    Layout = "~/Views/Admin/Shared/_AdminLayout.cshtml";
 }
 
 <hr />
-<h2 class="h2">Roles</h2>
-<hr />
-
-<table class="table table-responsive table-hover table-dark">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Name)
-        </th>
-        <th></th>
-    </tr>
-
-    @foreach (var item in Model)
+<p class="text-right">
+    @using (Html.BeginForm("ListRoles", "Admin", FormMethod.Get))
     {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "EditRole", new { roles = item.Name }) |
-                @Html.ActionLink("Delete", "DeleteRole", new { roles = item.Name })
-            </td>
-        </tr>
+        @Html.TextBox("Search", (string)ViewBag.Search, htmlAttributes: new { @class = "form-control form-inline my-2 my-md-0", @placeholder = "Search by roles" })
+    <p></p>
+    <input type="submit" value="Search" class="btn btn-outline-secondary" />
     }
-</table>
+</p>
+    <hr />
+
+    <table class="table table-responsive table-hover table-dark">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(m => Model.First().Name)
+            </th>
+            <th>
+                @Html.ActionLink("Sort", "ListRoles", new { SortOrder = ViewBag.SortOrder, Search = ViewBag.Search, PageNumber = Model.PageNumber }, new { @class = "text-white", @style = "text-decoration:none;" })
+
+            </th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "EditRole", new { roles = item.Name }) |
+                    @Html.ActionLink("Delete", "DeleteRole", new { roles = item.Name })
+                </td>
+            </tr>
+        }
+    </table>
 
 
-@Html.ActionLink("Create New", "CreateRole", null, new { @class="btn btn-primary"})
+    @Html.ActionLink("Create New", "CreateRole", null, new { @class = "btn btn-primary" })
+
+
+    <div>
+
+        @Html.PagedListPager(Model, page => Url.Action("ListRoles", new { PageNumber = page, SortOrder = ViewBag.CurrentSort, Search = ViewBag.Search }))
+    </div>

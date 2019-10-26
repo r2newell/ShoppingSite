@@ -18,7 +18,7 @@ namespace EC.Models
         [Required]
         [MaxLength(200)]
         [Display(Name = "Category")]
-        public string category_description { get; set; }
+        public string Description { get; set; }
         [Display(Name = "Products")]
         public List<Product> Products { get; set; }
     }

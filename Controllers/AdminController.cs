@@ -12,8 +12,7 @@ using System.Collections.Generic;
 
 namespace EC.Controllers
 {
-    
-    [Authorize(Roles = "Administrator,Employee, Customer")]
+    [Authorize(Roles = "Administrator,Employee,Manager")]
     public class AdminController : Controller
     {
         private ApplicationDbContext context = ApplicationDbContext.Create();
@@ -56,7 +55,7 @@ namespace EC.Controllers
                     roleResult = await manager.AddToRolesAsync(userId: user.Id, model.Roles.ToArray()); 
                     var code = await manager.GenerateEmailConfirmationTokenAsync(user.Id);
                     var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-                    //await manager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
+                    await manager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
                     return RedirectToAction("ListUsers");
                 }
                 AddError(roleResult);
@@ -67,19 +66,31 @@ namespace EC.Controllers
         }
 
         
-        public ActionResult ListUsers(string SortOrder, int? page, string search)
+        public ActionResult ListUsers(string SortOrder, int? PageNumber, string Search)
         {
             Initialize();
-            ViewBag.Sort = SortOrder;
-            int pageNumber = (page ?? 1);
+            ViewBag.CurrentSort = SortOrder;
+            ViewBag.SortOrder = string.IsNullOrEmpty(SortOrder)? "Descending": string.Empty;
+            ViewBag.Search = Search;
+            var users = from s in manager.Users select s; 
+            if(!string.IsNullOrEmpty(Search))
+            {
+                users = users.Where(m => m.Email.Contains(Search));
+                PageNumber = 1;
+            }
+            IQueryable<UserView> user;
             switch (SortOrder)
             {
                 case "Descending":
-                    return View(manager.Users.Select(m => new UserView { Email = m.Email, Phone = m.PhoneNumber, UserName = m.UserName }).OrderByDescending(s => s.Email).ToPagedList(pageNumber, PageSize));
+                   user =   users.Select(m => new UserView { Email = m.Email, Phone = m.PhoneNumber, UserName = m.UserName }).OrderByDescending(s => s.Email);
+                break;
+                
                 default:
-                    return  View(manager.Users.Select(m => new UserView { Email = m.Email, Phone = m.PhoneNumber, UserName = m.UserName }).OrderBy(s => s.Email).ToPagedList(pageNumber, PageSize));
+                    user = users.Select(m => new UserView { Email = m.Email, Phone = m.PhoneNumber, UserName = m.UserName }).OrderBy(s => s.Email);
+                break;
             }
-          
+            int page = (PageNumber ?? 1);
+            return View(user.ToPagedList(page, PageSize));
         }
 
         public ActionResult UserDetails(string Email)
@@ -182,6 +193,7 @@ namespace EC.Controllers
         {
             if(ModelState.IsValid)
             {
+                Session["User"] = model;
                 UserContext.users.Add(model);
                 UserContext.SaveChanges();
                 return RedirectToAction("ListUsers");
@@ -290,10 +302,31 @@ namespace EC.Controllers
             return View(model);
         }
 
-        public ActionResult ListRoles()
+        public ActionResult ListRoles(string SortOrder, int? PageNumber, string Search)
         {
             Initialize();
-            return View(roleManager.Roles);
+            ViewBag.CurrentSort = SortOrder;
+            ViewBag.SortOrder = string.IsNullOrEmpty(SortOrder) ? "Descending" : string.Empty;
+            ViewBag.Search = Search;
+            var roles = from s in roleManager.Roles select s; 
+
+            if(!string.IsNullOrEmpty(Search))
+            {
+                roles = roles.Where(m => m.Name.Contains(Search));
+                PageNumber = 1; 
+            }
+
+            switch(SortOrder)
+            {
+                case "Descending":
+                    roles = roles.OrderByDescending(m => m.Name);
+                    break;
+                default:
+                    roles = roles.OrderBy(m => m.Name);
+                    break; 
+            }
+            int page = (PageNumber ?? 1);
+            return View(roles.ToPagedList(page, PageSize));
         }
 
         #region Helpers

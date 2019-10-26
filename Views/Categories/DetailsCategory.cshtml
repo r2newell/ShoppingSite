@@ -1,0 +1,16 @@
+﻿@model EC.Models.Product
+
+@{
+    ViewBag.Title = "DetailsCategory";
+    Layout = "~/Views/Admin/Shared/_AdminLayout.cshtml";
+}
+
+<hr />
+<h2 class="h2">@Model.ProductName</h2>
+<hr />
+@Html.DropDownList("ID", new SelectList(Model.Categories.Select(m => m.Description)), new { @class = "form-control" })
+<br />
+<div>
+    @Html.ActionLink("Edit Categroies", "AddProducts",null ,new { @class="btn btn-primary white"}) |
+    @Html.ActionLink("Delete Categories", "DeleteAddProduct",new { Id = Model.ProductId }, new { @class="btn btn-primary white"})
+</div>

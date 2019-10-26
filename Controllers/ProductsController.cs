@@ -1,47 +1,56 @@
-﻿using System;
+﻿using EC.Models.Context;
+using PagedList;
+using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Web.Mvc;
-using EC.Models.Context;
-using PagedList;
 namespace EC.Models
 {
+    [Authorize(Roles = "Administrator,Employee,Manager")]
     public class ProductsController : Controller
     {
         private ProductContext db = new ProductContext();
         const int PageSize = 20; // number of records on a page
-       
-        // GET: Products
-        public ActionResult Index(string SortOrder, int? PageNumber, string search)
-        {
-            ViewBag.Sort = SortOrder;
-            ViewBag.Search = search;
-            var products = from m in db.Products select m; 
 
-            if(!string.IsNullOrEmpty(search))
-                products = db.Products.Where(m => m.ProductName.ToUpper().Contains(search));
-            
-            switch(SortOrder)
+        [Authorize(Roles = "Administrator,Employee,Manager")]
+        // GET: Products
+        public ActionResult Index(string SortOrder, int? PageNumber, string Search)
+        {
+            ViewBag.CurrentSort = SortOrder;
+            ViewBag.SortOrder = string.IsNullOrEmpty(SortOrder) ? "Descending" : string.Empty;
+            ViewBag.DateSort = string.IsNullOrEmpty(SortOrder) ? "Date Ascending" : string.Empty;
+            ViewBag.Search = Search;
+            var products = from m in db.Products select m;
+
+            if (!string.IsNullOrEmpty(Search))
+            {
+                products = products.Where(m => m.ProductName.ToUpper().Contains(Search));
+                PageNumber = 1;
+            }
+
+            switch (SortOrder)
             {
                 case "Descending":
-                    products = db.Products.OrderByDescending(m => m.ProductName);
+                    products = products.OrderByDescending(m => m.ProductName);
                     break;
                 case "Ascending":
-                    products = db.Products.OrderBy(m => m.ProductName);
+                    products = products.OrderBy(m => m.ProductName);
                     break;
                 case "Date Ascending":
-                    products = db.Products.OrderBy(m => m.Date);
+                    products = products.OrderBy(m => m.Date);
                     break;
                 default:
-                    products = db.Products.OrderByDescending(m => m.Date);
-                    break;       
+                    products = products.OrderByDescending(m => m.Date);
+                    break;
             }
             int page = (PageNumber ?? 1);
             return View(products.ToPagedList(page, PageSize));
         }
 
+        [Authorize(Roles = "Administrator,Employee,Manager")]
         [HttpGet]// GET: Products/Details/5
         public ActionResult Details(int? id)
         {
@@ -58,10 +67,12 @@ namespace EC.Models
             return View(product);
         }
 
+        [Authorize(Roles = "Manager,Administrator")]
         // GET: Products/Create
         public ActionResult Create()
         {
-            ViewBag.CategoryID = new SelectList(db.Categories, "CategoryID", "category_description");
+            Session["categories"] = db.Categories.ToDictionary(m => m.CategoryID);
+            ViewBag.Categories = Session["categories"];
             return View();
         }
 
@@ -70,19 +81,28 @@ namespace EC.Models
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ProductId,ProductName,Description,Quantity,Price,ImageFile")] Product product)
+        public ActionResult Create([Bind(Include = "ProductId,ProductName,Description,Quantity,category,Price,ImageFile")] Product product)
         {
+            var dictionary = (Dictionary<int, Category>)Session["categories"];
             if (ModelState.IsValid)
             {
+                product.Categories = new List<Category>();
+                foreach (var category in product.category)
+                {
+                    product.Categories.Add(dictionary[category]);
+                }
                 product.Date = DateTime.Now;
-                product.ImagePath = SaveImage(product); 
+                product.ImagePath = SaveImage(product);
                 db.Products.Add(product);
                 db.SaveChanges();
+                Session.Remove("categories");
                 return RedirectToAction("Index");
             }
+            ViewBag.Categories = dictionary;
             return View(product);
         }
 
+        [Authorize(Roles = "Administrator,Manager")]
         // GET: Products/Edit/5
         public ActionResult Edit(int? id)
         {
@@ -121,6 +141,7 @@ namespace EC.Models
             return View(product);
         }
 
+        [Authorize(Roles = "Administrator,Manager")]
         // GET: Products/Delete/5
         public ActionResult Delete(int? id)
         {
@@ -129,7 +150,7 @@ namespace EC.Models
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             Product product = db.Products.Find(id);
-    
+
             if (product == null)
             {
                 return HttpNotFound();
@@ -156,7 +177,7 @@ namespace EC.Models
             return View();
         }
 
-      
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)
@@ -189,7 +210,7 @@ namespace EC.Models
             string FullPath = Server.MapPath(product.ImagePath);
             FileInfo fileInfo = new FileInfo(FullPath);
             fileInfo.Delete();
-           
+
         }
     }
 }

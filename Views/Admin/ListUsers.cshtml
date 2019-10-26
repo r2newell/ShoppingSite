@@ -7,67 +7,70 @@
 }
 
 <hr />
-<h4 class="h4">Users</h4>
-<hr />
-<table class="table table-dark table-hover table-responsive  table-responsive-sm table">
-
-    @{
-        int count = 0;
-    }
-    @foreach (var item in Model)
+<p class="text-right">
+    @using (Html.BeginForm("ListUsers", "Admin", FormMethod.Get))
     {
-        if (count == 0)
+        @Html.TextBox("Search", null, htmlAttributes: new { @class = "form-control form-inline my-2 my-md-0", @placeholder = "Search by user email" })
+    <p></p>
+    <input type="submit" value="Search" class="btn btn-outline-secondary" />
+}
+    </p>
+<hr />
+
+    <table class="table table-dark table-hover table-responsive  table-responsive-sm table">
+
+        <tr>
+            <th>
+
+                @Html.DisplayNameFor(m => Model.First().Email)
+            </th>
+            <th>
+                @Html.DisplayNameFor(m => Model.First().Phone)
+            </th>
+            <th>
+                @Html.DisplayNameFor(m => Model.First().UserName)
+            </th>
+            <th>
+                @Html.ActionLink("Sort by Name", "ListUsers", new { SortOrder = ViewBag.SortOrder, Search = ViewBag.Search, PageNumber = Model.PageNumber }, new { @class = "text-white" , @style="text-decoration:none;"})
+            </th>
+        </tr>
+
+        @foreach (var item in Model)
         {
             <tr>
-                <th>
-
-                    @Html.DisplayNameFor(model => item.Email)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => item.Phone)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => item.UserName)
-                </th>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Email)
+                </td>
+                <td>
+                    @if (item.Phone != null)
+                    {
+                        Html.DisplayFor(modelItem => item.Phone);
+                    }
+                    else
+                    {
+                        <p>None</p>
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UserName)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "EditUser", new { Email = item.Email }) |
+                    @Html.ActionLink("Details", "UserDetails", new { Email = item.Email }) |
+                    @Html.ActionLink("Delete", "DeleteUser", new { Email = item.Email })|
+                    @Html.ActionLink("Change Password", "ChangePassword", new { Email = item.Email }, null)
+                </td>
             </tr>
         }
-        count++;
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Email)
-            </td>
-            <td>
-                @if (item.Phone != null)
-                {
-                    Html.DisplayFor(modelItem => item.Phone);
-                }
-                else
-                {
-                    <p>None</p>
-                }
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UserName)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "EditUser", new { Email = item.Email }) |
-                @Html.ActionLink("Details", "UserDetails", new { Email = item.Email }) |
-                @Html.ActionLink("Delete", "DeleteUser", new { Email = item.Email })|
-                @Html.ActionLink("Change Password", "ChangePassword", new { Email = item.Email }, null)
-            </td>
-        </tr>
-    }
-</table>
-<hr />
-<div class="btn btn-primary white">
-    @Html.ActionLink("Create New", "Create")
-</div>
+    </table>
+    <hr />
+    <div class="btn btn-primary white">
+        @Html.ActionLink("Create New", "Create")
+    </div>
 
 
 
 
-<div>
-    @Html.PagedListPager(Model, page => Url.Action("Index",
-        new { sortOrder = ViewBag.Sort, page = page }), PagedListRenderOptions.PageNumbersOnly
-        )
-</div>
+    <div>
+        @Html.PagedListPager(Model, page => Url.Action("Index", new { sortOrder = ViewBag.Sort, Search = ViewBag.Search, PageNumber = page }))
+    </div>

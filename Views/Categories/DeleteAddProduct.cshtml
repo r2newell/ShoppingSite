@@ -1,0 +1,54 @@
+﻿@model EC.Models.AddProducts
+@using EC.Models;
+@{
+    ViewBag.Title = "DeleteAddProduct";
+    Layout = "~/Views/Admin/Shared/_AdminLayout.cshtml";
+    var product = (Product)TempData["product"];
+    TempData.Keep("product");
+}
+
+<hr />
+    <h2>@product.ProductName</h2>
+<hr />
+
+
+@using (Html.BeginForm())
+{
+  
+    @Html.AntiForgeryToken()
+
+<div class="form-horizontal">
+
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    @Html.HiddenFor(model => model.ID, new { @value = product.ProductId })
+
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.categories, htmlAttributes: new { @class = "control-label col-md-2" })
+        <select name="categories" class="form-control" data-role="select-dropdown" multiple>
+            @{
+                
+                foreach (var category in product.Categories.ToList())
+                {
+                    <option value="@category.CategoryID" >@category.Description</option>
+                }
+            }
+        </select>
+    </div>
+
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Delete" class="btn btn-danger" />
+        </div>
+    </div>
+</div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index", null,new { @class="btn btn-primary white"})
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

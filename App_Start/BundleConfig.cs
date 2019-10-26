@@ -8,8 +8,10 @@ namespace EC
         // For more information on bundling, visit https://go.microsoft.com/fwlink/?LinkId=301862
         public static void RegisterBundles(BundleCollection bundles)
         {
+
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
                         "~/Scripts/jquery-{version}.js"));
+
 
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
                         "~/Scripts/jquery.validate*"));
@@ -20,20 +22,26 @@ namespace EC
                         "~/Scripts/modernizr-*"));
 
          
-            bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
-                      "~/Scripts/bootstrap.js"));
+            bundles.Add(new ScriptBundle("~/Scripts/bootstrap").Include(
+                      "~/Scripts/popper.js","~/Scripts/bootstrap.js"));
 
             bundles.Add(new ScriptBundle("~/Scripts/bundle").Include(
                       "~/Scripts/bundle.js"));
 
-           
+
+
+
+
 
             bundles.Add(new ScriptBundle("~/Scripts/multiselect").Include(
                      "~/Scripts/bootstrap-select-dropdown.js"));
 
            
+            bundles.Add(new ScriptBundle("~/Scripts/multiselect").Include(
+                     "~/Scripts/bootstrap-select-dropdown.js"));
 
-        bundles.Add(new ScriptBundle("~/Scripts/tagsinput").Include(
+
+            bundles.Add(new ScriptBundle("~/Scripts/tagsinput").Include(
                  "~/Scripts/jquery.tagsinput.js"));
 
             bundles.Add(new ScriptBundle("~/Scripts/multiselect-min").Include(

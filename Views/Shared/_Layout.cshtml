@@ -4,6 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - Romario Newell Shopping Site</title>
+    @Scripts.Render("~/Scripts/popper")
     @Styles.Render("~/Content/css")
     @Styles.Render("~/Content/navbar")
     @Scripts.Render("~/bundles/modernizr")
@@ -11,7 +12,9 @@
     @Scripts.Render("~/Scripts/multiselect-min")
     @Styles.Render("~/Content/PagedList")
     @Scripts.Render("~/Scripts/bundle")
-    
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/Scripts/bootstrap")
+
 
     <style>
         .white > a {
@@ -35,7 +38,8 @@
             <ul class="navbar-nav mr-auto">
                 @Html.ActionLink("Home", "Index", "Home", new { area = "" }, new { @class = "nav-item nav-link active" })
                 @Html.Partial("_LoginPartial")
-                <li class="nav-item dropdown">
+
+                <li class="dropdown">
                     <a class="nav-link active dropdown-toggle" href="#" id="dropdown03" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More</a>
                     <div class="dropdown-menu" aria-labelledby="dropdown03">
                         @Html.ActionLink("About", "About", "Home", null, new { @class = "dropdown-item" })
@@ -54,8 +58,6 @@
             <p>&copy; @DateTime.Now.Year - Romario Newell</p>
         </footer>
     </div>
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
 </body>
 </html>

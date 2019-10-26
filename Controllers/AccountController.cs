@@ -405,8 +405,7 @@ namespace EC.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult LogOff()
         {
-            Session["Email"] = null; 
-            Session["User"] = null;
+            Session.Clear();
             AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
             return RedirectToAction("Index", "Home");
         }

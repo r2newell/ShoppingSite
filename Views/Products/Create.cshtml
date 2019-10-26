@@ -1,5 +1,5 @@
 ﻿@model EC.Models.Product
-
+@using EC.Models;
 @{
     ViewBag.Title = "Create";
     Layout = "~/Views/Admin/Shared/_AdminLayout.cshtml";
@@ -54,6 +54,18 @@
                 <input type="file" name="ImageFile" accept="image/png, image/jpeg" required class="form-control" />
                 @Html.ValidationMessageFor(model => model.ImageFile, "", new { @class = "text-danger" })
             </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Categories, htmlAttributes: new { @class = "control-label col-md-2" })
+            <select name="category" class="form-control" data-role="select-dropdown" multiple required>
+                @{
+                    foreach (var category in (Dictionary<int, Category>)ViewBag.Categories)
+                    {
+                        <option value="@category.Key">@category.Value.Description</option>
+                    }
+                }
+            </select>
         </div>
 
         <div class="form-group">

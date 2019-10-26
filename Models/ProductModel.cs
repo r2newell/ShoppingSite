@@ -34,11 +34,13 @@ namespace EC.Models
 
 
         [Display(Name = "Product Category")]
-        public ICollection<Category> Categories { get; set; }
+        public List<Category> Categories { get; set; }
 
         [Display(Name = "Cart Items")]
-        public ICollection<CartItem> CartItems { get; set; }
+        public List<CartItem> CartItems { get; set; }
 
+        [NotMapped]
+        public List<int> category { get; set; }
 
 
         [Display(Name = "Price")]
