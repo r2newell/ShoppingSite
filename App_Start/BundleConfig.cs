@@ -23,7 +23,13 @@ namespace EC
 
          
             bundles.Add(new ScriptBundle("~/Scripts/bootstrap").Include(
-                      "~/Scripts/popper.js","~/Scripts/bootstrap.js"));
+                      "~/Scripts/bootstrap.js", "~/Scripts/bootstrap.min.js"));
+
+
+
+            bundles.Add(new ScriptBundle("~/Scripts/popper").Include(
+                     "~/Scripts/umd/popper.min.js"));
+
 
             bundles.Add(new ScriptBundle("~/Scripts/bundle").Include(
                       "~/Scripts/bundle.js"));

@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Web.Mvc;
+
 namespace EC.Models
 {
     [Authorize(Roles = "Administrator,Employee,Manager")]

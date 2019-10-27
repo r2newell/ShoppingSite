@@ -24,7 +24,7 @@ namespace EC.Models
         public double Total { get; set; }
 
         [Display(Name = "Shopping Cart")]
-        public string CartId { get; set; }
+        public int CartId { get; set; }
         public ShoppingCart ShoppingCart { get; set; }
 
         [Range(minimum: 0, maximum: Double.MaxValue, ErrorMessage = "Can not be a negative value.")]
@@ -40,9 +40,11 @@ namespace EC.Models
     public class ShoppingCart
     {
         [Key]
-        public string CartId { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    
+        public int CartId { get; set; }
 
-        public ICollection<CartItem> CartItems { get; set; }
+        public List<CartItem> CartItems { get; set; }
 
         [DataType(DataType.Currency)]
         [Required]
@@ -58,9 +60,10 @@ namespace EC.Models
         public string Email { get; set; }
 
         [Key]
-        public string OrderNumber {get ;set; }
-        
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int OrderNumber {get ;set; }
 
+        
         [Required]
         public string FirstName { get; set; }
 
@@ -78,7 +81,8 @@ namespace EC.Models
         [Required]
         public string Address { get; set; }  
         
-        public string CartId { get; set; }
+        [Required]
+        public int CartId { get; set; }
         public ShoppingCart ShoppingCart { get; set; }
     }
 }

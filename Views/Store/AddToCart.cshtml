@@ -1,79 +1,77 @@
 ﻿@model EC.Models.CartItem
-
+@using EC.Models;
 @{
     ViewBag.Title = "AddToCart";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = "~/Views/Admin/Shared/_AdminLayout.cshtml";
+    var shoppingCart = (ShoppingCart)Session["ShoppingCart"];
 }
 
+<hr />
+<h2>@Model.Product.ProductName</h2>
+<hr />
 
-    <div class="card mb-3" style="max-width: 540px;">
-        <div class="row no-gutters">
-            <div class="col-md-4">
-                <img src="..." class="card-img" alt="...">
-            </div>
-            <div class="col-md-8">
-                <div class="card-body">
-                    <h5 class="card-title">Card title</h5>
-                    <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                    <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="card mb-3" style="max-width: 540px;">
-        <div class="row no-gutters">
+<div class="card mb-3 bg-dark text-white">
+    <div class="row">
         <div class="col-md-4">
-            <img src="..." class="card-img" alt="...">
+            <img src="@Url.Content(Model.Product.ImagePath)" class="card-img img-fluid rounded">
         </div>
         <div class="col-md-8">
             <div class="card-body">
-                <h5 class="card-title">Card title</h5>
-                <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
-                </div>
+                <table class=" table-responsive table table-dark table-hover card-text">
+                    <tbody>
+                        <tr>
+                            <td>Product Description</td>
+                            <td scope="row"> @Model.Product.Description </td>
+                        </tr>
+                        <tr>
+                            <td>Quantity</td>
+                            <td scope="row">@Model.Product.Quantity</td>
+                        </tr>
+                        <tr>
+                            <td>Price</td>
+                            <td>@Html.DisplayFor(model => Model.Product.Price)</td>
+                        </tr>
+                        <tr>
+                            @using (Html.BeginForm())
+                            {
+                                @Html.AntiForgeryToken()
+                            <div class="form-row">
+                                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                                <div class="form-group">
+                                    <td scope="row">@Html.LabelFor(model => model.Quantity, htmlAttributes: new { @class = "control-label" }) </td>
+                                    <div class="col-md-10">
+                                        <td>@Html.EditorFor(model => model.Quantity, new { htmlAttributes = new { @class = "form-control form-control-sm" } })</td>
+                                        @Html.ValidationMessageFor(model => model.Quantity, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    @if (Model.Product.Quantity > 0)
+                                    {
+                                        <div class="col-md-offset-2 col-md-10">
+                                            <input type="submit" value="Add To Cart" class="btn btn-danger" />
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                            }
+                        </tr>
+                    
+                    </tbody>
+                </table>
+
+              
             </div>
+          
         </div>
     </div>
+</div>
 
 
-@using (Html.BeginForm()) 
-{
-    @Html.AntiForgeryToken() 
-    <div class="form-horizontal">
-        <h4>CartItem</h4>
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        <div class="form-group">
-            <div class="col-md-10">
-               
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="col-md-10">
-                @Html.HiddenFor(model => model.Total, new { htmlAttributes = new { @class = "form-control" } })
-            </div>
-        </div>
-        <div class="form-group">
-            @Html.LabelFor(model => model.Quantity, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Quantity, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Quantity, "", new { @class = "text-danger" })
-            </div>
-        </div>
 
 
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-default" />
-            </div>
-        </div>
-    </div>
-}
 
 <div>
-    @Html.ActionLink("Back to List", "ListUsers")
+    @Html.ActionLink("Back", "Index", null, new { @class="btn btn-primary"})
 </div>
 
 @section Scripts {

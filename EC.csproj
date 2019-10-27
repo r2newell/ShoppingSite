@@ -413,15 +413,12 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201910230734591_Initial.cs" />
-    <Compile Include="Migrations\201910230734591_Initial.Designer.cs">
-      <DependentUpon>201910230734591_Initial.cs</DependentUpon>
+    <Compile Include="Migrations\201910271000408_Initial.cs" />
+    <Compile Include="Migrations\201910271000408_Initial.Designer.cs">
+      <DependentUpon>201910271000408_Initial.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201910230750037_ProductModel.cs" />
-    <Compile Include="Migrations\201910230750037_ProductModel.Designer.cs">
-      <DependentUpon>201910230750037_ProductModel.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Migrations\ProductConfiguration.cs" />
+    <Compile Include="Migrations\UserConfiguration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Controllers\CategoriesController.cs" />
     <Compile Include="Models\AddProducts.cs" />
@@ -564,6 +561,7 @@
     <Content Include="Scripts\bootstrap-tagsinput.js" />
     <Content Include="Scripts\bootstrap-tagsinput.min.js" />
     <Content Include="Scripts\bootstrap.js" />
+    <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\bundle.js" />
     <Content Include="Scripts\bootstrap.min.js.map" />
     <Content Include="Scripts\bootstrap.js.map" />
@@ -722,15 +720,12 @@
     <WCFMetadataStorage Include="Connected Services\ASPSMSX2\" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201910230734591_Initial.resx">
-      <DependentUpon>201910230734591_Initial.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201910230750037_ProductModel.resx">
-      <DependentUpon>201910230750037_ProductModel.cs</DependentUpon>
-    </EmbeddedResource>
+    <TypeScriptCompile Include="Scripts\index.d.ts" />
   </ItemGroup>
   <ItemGroup>
-    <TypeScriptCompile Include="Scripts\index.d.ts" />
+    <EmbeddedResource Include="Migrations\201910271000408_Initial.resx">
+      <DependentUpon>201910271000408_Initial.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

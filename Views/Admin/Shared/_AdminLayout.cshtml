@@ -5,9 +5,11 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - Romario Newell Shopping Site</title>
-    @Scripts.Render("~/Scripts/popper")
-    @Styles.Render("~/Content/tagsinput")
     @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/Scripts/popper")
+    @Scripts.Render("~/bundles/bootstrap")
+    @Styles.Render("~/Content/tagsinput")
     @Styles.Render("~/Content/dashboard")
     @Scripts.Render("~/bundles/modernizr")
     @Scripts.Render("~/Scripts/multiselect")
@@ -33,30 +35,20 @@
 <body>
     <nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap shadow">
         <div class="col-sm-3 col-md-2 mr-0">
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent" aria-expanded="false">
                 <span><img src="~/Icons/admin.svg" style="width: 1.5em;" /></span>
             </button>
         </div>
      
-        <ul class="navbar-nav px-3">
-            <li class="nav-item text-nowrap">
-                @if (Request.IsAuthenticated)
-                 {
-                   using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm" }))
-                    {
-                        Html.AntiForgeryToken();
-                        <a href="javascript:document.getElementById('logoutForm').submit()" class="active nav-item nav-link">Sign Out</a>
-                    }
-                }
-            </li>
-        </ul>
+        
     </nav>
     <div class="container-fluid collapse text-white"   id="navbarToggleExternalContent">
         <div class="row">
             <nav class="col-md-2 d-none d-md-block bg-light sidebar bg-dark">
                 <div class="sidebar-sticky">
                     <ul class="nav flex-column">
-                        @Html.ActionLink("Home", "Index", "Admin",new { area = "" } ,new { @class = "nav-item nav-link text-white hover" })
+                        @Html.ActionLink("Home", "Index", "Admin", new { area = "" }, new { @class = "nav-item nav-link text-white hover" })
+                        @Html.ActionLink("Store", "Index", "Store", new { area = "" }, new { @class = "nav-item nav-link text-white hover" })
                         @Html.ActionLink("Products", "Index", "Products", null, new { @class = "nav-item nav-link text-white hover" })
                         @Html.ActionLink("Categories", "Index", "Categories", null, new { @class = "nav-item nav-link text-white hover" })
                         @Html.ActionLink("Profile Details", "Details", "User", null, new { @class = "nav-item nav-link text-white hover" })
@@ -66,6 +58,18 @@
                         @Html.ActionLink("Orders", "#", "#", null, new { @class = "nav-item nav-link text-white hover" })
                         @Html.ActionLink("About", "About", "Home", null, new { @class = "nav-item nav-link text-white hover" })
                         @Html.ActionLink("Contact", "Contact", "Home", null, new { @class = "nav-item nav-link text-white hover" })
+                        
+                            <li class="nav-item text-nowrap">
+                                @if (Request.IsAuthenticated)
+                                {
+                                    using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm" }))
+                                    {
+                                        Html.AntiForgeryToken();
+                                        <a href="javascript:document.getElementById('logoutForm').submit()" class="nav-item nav-link text-white hover">Sign Out</a>
+                                    }
+                                }
+                            </li>
+                        
                     </ul>
                 </div>
             </nav>
@@ -79,8 +83,8 @@
                 </footer>
             </div>
 </body>
-@Scripts.Render("~/bundles/jquery")
-@Scripts.Render("~/bundles/bootstrap")
+
+
 @RenderSection("scripts", required: false)
 </html>
 

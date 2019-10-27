@@ -1,65 +1,91 @@
-﻿@model IEnumerable<EC.Models.Product>
+﻿@using PagedList.Mvc;
+@model  PagedList.IPagedList<EC.Models.Product>
+
 
 @{
     ViewBag.Title = "Product";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+
+    
+
+
+
+
+
+
+
 @Styles.Render("~/Content/grid")
-
-
+<hr />
+@using (Html.BeginForm("Index", "Store", FormMethod.Get, null))
+{
+    <div class="row">
+        <div class="col-sm-4 mb-3">
+            @Html.TextBox("Search", null, new { @class = "form-control form-control-sm form-control-dark", @placeholder = "search by product name" })
+            <br />
+            <input type="submit" value="Search" class="btn btn-outline-secondary btn-sm" />
+            <button class="btn btn-outline-secondary btn-sm" type="button" data-toggle="collapse" aria-controls="collapseThree" aria-expanded="false" data-target="#collapseThree"  >Search Options</button>
+        </div>
+        <div class="col collapse"   id="collapseThree">
+            <div class="row">
+                <div class="col mb-3">
+                    <div class="input-group input-group-sm">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">$</span>
+                        </div>
+                        <input type="number" class="form-control form-control-sm" name="min" value="0.00" step="0.01" min="0.00">
+                        <div class="input-group-append">
+                            <span class="input-group-text"></span>
+                        </div>
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">$</span>
+                        </div>
+                        <input type="number" class="form-control form-control-sm" name="max" value="0.00" step="0.01" min="0.00">
+                        <div class="input-group-append">
+                            <span class="input-group-text">.00</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-auto mb-3">
+                    @Html.DropDownList("Filter", (SelectList)ViewBag.Categories, new { @class = "form-control form-control-sm" })
+                </div>
+                <div class="col-sm-auto">
+                    <ul class="list-group accordion" id="option">
+                        <li class="list-group-item btn btn-outline-dark" role="button"  data-toggle="collapse" aria-expanded="false" aria-controls="collapseOne" data-target="#collapseOne">Sort Price</li>
+                        <div id="collapseOne" class="collapse" data-parent="#option">
+                            <li class="list-group-item list-group-item-action"><input type="radio" class="form-check-input form-check" value="Price_Descending" name="Price" /> Lowest - Highest</li>
+                            <li class="list-group-item list-group-item-action"><input type="radio" class="form-check-input" value="Price_Ascending" name="Price" /> Highest - Lowest</li>
+                        </div>
+                        <li class="list-group-item btn btn-outline-dark" role="button" data-toggle="collapse" aria-expanded="false" aria-controls="collapseTwo" data-target="#collapseTwo">Sort Name</li>
+                        <div id="collapseTwo" class="collapse collapsing" data-parent="#option">
+                            <li class="list-group-item list-group-item-action"><input type="radio" class="form-check-input" value="Name_Ascending" name="Name" /> Ascending</li>
+                            <li class="list-group-item list-group-item-action"><input type="radio" class="form-check-input" value="Name_Descending" name="Name" /> Descending</li>
+                        </div>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+}
 <hr />
 <div class="row">
     @foreach (var product in Model)
     {
-        <div class="col-sm-2">
-            <div class="card mb-4 text-white bg-dark" style="width: 18rem;">
-                <h5 class="card-header">
+        <div class="col-sm-3">
+            <div class="card bg-dark text-white">
+                <div class="card-header ">
                     @product.ProductName
-                </h5>
-                <img src="@Url.Content(product.ImagePath)" class="card-img-top" />
-                <div class="card-body collapse" id="collapseExample">
-                    <table class="table table-responsive table-borderless text-white">
-                        <tbody>
-                            <tr>
-                                <td class="card-text">Price</td>
-                                <td>@Html.DisplayFor(item => product.Price)</td>
-                            </tr>
-                            <tr>
-                                <td class="card-text">Quantity</td>
-                                @if (product.Quantity != 0)
-                                {
-                                    <td>@product.Quantity</td>
-                                }else
-                                {
-                                    <td>Out of Stock</td>
-                                }
-                            </tr>
-                            <tr>
-                                <td class="card-text">About</td>
-                                <td>@product.Description</td>
-                            </tr>
-                        </tbody>
-                    </table>
                 </div>
-                <div class="card-footer text-muted">
-                    <div class="btn-group">
-                        <button type="button" class="btn btn-sm btn-outline-secondary text-white" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">View</button>
-                        @if(product.Quantity != 0)
-                        {
-                            <button type="button" class="btn btn-sm btn-outline-secondary white">@Html.ActionLink("Add to Cart", "AddToCart","Store",new { product = product})</button>
-                        }
-                        else
-                        {
-                            <button type="button" class="btn btn-sm btn-outline-secondary white">@Html.ActionLink("Add to Cart", "AddToCart",new { @class = "nav-item nav-link active" })</button>
-                        }
-                    </div>
+                <img src="@Url.Content(product.ImagePath)" class="img-fluid img-thumbnail rounded" />
+                <div class="card-body ">
+                    @Html.ActionLink("View", "AddToCart",  new { id = product.ProductId}, new { @class="btn btn-primary form-control"})
                 </div>
-                </div>
-            </div>
+            </div> 
+        </div>
     }
-
-    </div>
-
+</div>
+   @Html.PagedListPager(Model, page => Url.Action("Index", new { PageNumber = page, Name = ViewBag.Name, Price = ViewBag.Price,Search = ViewBag.Search, min = ViewBag.Min, max = ViewBag.max }))
+</div>
 
 

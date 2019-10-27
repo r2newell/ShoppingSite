@@ -13,7 +13,7 @@ namespace EC.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "201910230734591_Initial"; }
+            get { return "201910271000408_Initial"; }
         }
         
         string IMigrationMetadata.Source
