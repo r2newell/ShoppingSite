@@ -79,6 +79,9 @@ namespace EC.Models
         public string Phone { get; set; }
 
         [Required]
+        public string Country { get; set; }
+
+        [Required]
         public string Address { get; set; }  
         
         [Required]

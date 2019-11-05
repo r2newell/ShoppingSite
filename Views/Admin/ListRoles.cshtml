@@ -37,8 +37,8 @@
                     @Html.DisplayFor(modelItem => item.Name)
                 </td>
                 <td>
-                    @Html.ActionLink("Edit", "EditRole", new { roles = item.Name }) |
-                    @Html.ActionLink("Delete", "DeleteRole", new { roles = item.Name })
+                    @Html.ActionLink("Edit", "EditRole", new { roles = item.Name },new { @class = "text-white", @style="text-decoration:none;" }) |
+                    @Html.ActionLink("Delete", "DeleteRole", new { roles = item.Name },new { @class = "text-white", @style="text-decoration:none;" })
                 </td>
             </tr>
         }

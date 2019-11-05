@@ -45,12 +45,12 @@ namespace EC.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Email,FirstName,LastName,Dob")] User user)
+        public async Task<ActionResult> Create([Bind(Include = "Email,FirstName,LastName,Dob")] User user)
         {
             if (ModelState.IsValid)
             {
                 db.users.Add(user);
-                db.SaveChanges();
+                await db.SaveChangesAsync();
                 Session["User"] = user;
                 return RedirectToAction("Details");
             }
@@ -74,12 +74,12 @@ namespace EC.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Email,FirstName,LastName,Dob")] User user)
+        public async Task<ActionResult> Edit([Bind(Include = "Email,FirstName,LastName,Dob")] User user)
         {
             if (ModelState.IsValid)
             {
                 db.Entry(user).State = EntityState.Modified;
-                db.SaveChanges();
+                await db.SaveChangesAsync();
                 return RedirectToAction("Details");
             }
             return View(user);
@@ -94,19 +94,20 @@ namespace EC.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [ActionName("Delete")]
-        public ActionResult DeleteConfirmed()
+        public async Task<ActionResult> DeleteConfirmed()
         {
             User user = (User)Session["User"];
+            var Email = (string)Session["Email"];
             if (user != null)
             {
                 db.Entry(user).State = EntityState.Deleted;
-                db.SaveChanges();
+                await db.SaveChangesAsync();
             }
            
-            var Email = (string)Session["Email"];
+           
             var manager = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
             HttpContext.GetOwinContext().Authentication.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
-            manager.Delete(manager.FindByEmail(Email));
+            manager.Delete(await manager.FindByEmailAsync(Email));
             Session["User"] = null;
             return RedirectToAction("Index", "Home", null);
         }

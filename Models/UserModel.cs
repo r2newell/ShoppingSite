@@ -11,6 +11,7 @@ namespace EC.Models
 {
     public class User
     {
+        [Required]
         [EmailAddress]
         [Key]
         public string Email { get; set; }

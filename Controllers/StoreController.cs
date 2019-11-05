@@ -8,6 +8,7 @@ using System.Net;
 using System.Web.Mvc;
 using EC.Models;
 using EC.Models.Context;
+using System.Threading.Tasks;
 
 namespace EC.Controllers
 {
@@ -15,48 +16,48 @@ namespace EC.Controllers
     {
         private ProductContext db = new ProductContext();
         private const int PageSize = 12;
-        public ActionResult Index(string Search, int? PageNumber, int? min, int? max, int? Filter, string Price, string Name)
+        public async Task<ActionResult> Index(string Search, int? PageNumber, int? min, int? max, int? Filter,int? Price, string Name)
         {
             var products = from p in db.Products.Include(p => p.Categories) select p;
             var categories = from c in db.Categories.Include(c => c.Products) select c;
             ViewBag.Search = Search;
-            ViewBag.Price = !string.IsNullOrEmpty(Price)? Price: ViewBag.Price;
+            ViewBag.Price = Price != null && Price == 1 ? Price = 2 : Price = 1;
             ViewBag.Name = !string.IsNullOrEmpty(Name)? Name : ViewBag.Name;
             ViewBag.Max = max;
             ViewBag.Min = min;
-            ViewBag.Categories = new SelectList(categories.ToList(), dataValueField: "CategoryID", dataTextField: "Description");
+            ViewBag.Categories = new SelectList(await categories.ToListAsync(), dataValueField: "CategoryID", dataTextField: "Description");
 
             if(!string.IsNullOrEmpty(Search))
             {
                 
-                products =  products.Where(m => m.ProductName.Contains(Search));
+                products =  products.Where(m => m.ProductName.Contains(Search) || m.Description.Contains(Search));
                 PageNumber = 1; 
             }
 
-            if(min != null && min > 0 && min < max)
+            if(min != null && max == null && min > 0)
             {
                 products = products.Where(m => m.Price >= min);
                 PageNumber = 1;
 
-            }
-
-            if(min != null && max > 0 && min < max)
+            }else if(max != null && min == null && max > 0)
             {
                 products = products.Where(m => m.Price <= max);
                 PageNumber = 1;
-            }
-
-            switch (ViewBag.Price)
+            }else if(max != null && min != null && min < max)
             {
-                case "Price_Descending":
-                    products = products.OrderByDescending(m => m.Price); 
-                    break;
-                default:
-                    products = products.OrderBy(m => m.Price);
-                    break; 
+                products = products.Where(m => m.Price >= min && m.Price <= max);
+                PageNumber = 1;
             }
 
-            switch(ViewBag.Name)
+           if(Price != null)
+            {
+                if (Price == 1)
+                    products = products.OrderByDescending(m => m.Price);
+                else products = products.OrderBy(m => m.Price);
+                PageNumber = 1;
+            }
+
+            switch((string)ViewBag.Name)
             {
                 case "Name_Descending":
                     products = products.OrderByDescending(m => m.ProductName);
@@ -72,40 +73,26 @@ namespace EC.Controllers
 
 
         
-        public ActionResult AddToCart(int? id)
+        public async Task<ActionResult> AddToCart(int? id)
         {
-            var product = db.Products.Find(id);
+            var product = await db.Products.FindAsync(id);
+            ShoppingCart cart; 
             if(Session["ShoppingCart"] == null)
             {
-                Session["ShoppingCart"] = new ShoppingCart { CartItems = new List<CartItem>()};
+                Session["ShoppingCart"] = new ShoppingCart { Date = DateTime.Now,CartItems = new List<CartItem>()};
             }
-          
-            CartItem item = new CartItem { Product = product, ProductId = product.ProductId, Quantity = 0, Total = 0.00};
+            cart = (ShoppingCart) Session["ShoppingCart"];
+            CartItem item = new CartItem { Product = product, ProductId = product.ProductId, Quantity = 0, CartId = cart.CartId , ShoppingCart = cart, Total = 0.00};
             return View(item);
         }
 
-        public ActionResult AddToCart([Bind(Include = "ItemID,ProductId,Product,Total,CartId,ShoppingCart,Quantity")]CartItem item)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> AddToCart([Bind(Include = "ItemID,ProductId,Total,Quantity")]CartItem item)
         {
-            bool state = false;
+           
             var cart = (ShoppingCart)Session["ShoppingCart"];
-
-            if(item.Quantity == 0)
-            {
-                state = true;
-                ModelState.AddModelError("Quantity", "Quantity must be greater than zero");
-            }
-
-            if(item.Quantity > item.Product.Quantity)
-            {
-                state = true;
-                ModelState.AddModelError("Quantity", "Can not be greater than product quantity");
-            }
-
-            if(state)
-            {
-                return View(item);
-            }
-
+            item.Product = await db.Products.FindAsync(item.ProductId);
             item.Total = item.Sum();
             var duplicate = cart.CartItems.Find(m => m.ProductId == item.ProductId);
 
@@ -114,9 +101,72 @@ namespace EC.Controllers
             else
             {
                 cart.CartItems.Remove(duplicate);
-                cart.CartItems.Add(item);
+                item.Product.Quantity += duplicate.Quantity;
+                cart.Total -= duplicate.Total;
+                cart.CartItems.Add(item); 
+                
             }
+
+            cart.Total += item.Total;
+            ViewBag.Message = "Successfully Added to Cart";
+            item.Product.Quantity -= item.Quantity;
+            db.Entry(item.Product).State = EntityState.Modified;
+            await db.SaveChangesAsync();
+            Session["ShoppingCart"] = cart;
+            return View(item);
+        }
+
+
+        
+        public ActionResult ListCart()
+        {
+            var cart = (ShoppingCart)Session["ShoppingCart"];
+            if(cart != null)
+                return View(cart);
+
+            return RedirectToAction("Index");
+
+        }
+
+        public ActionResult Checkout()
+        {
             return View();
         }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> CheckOut([Bind(Include = "Email,OrderNumber,FirstName,LastName,Date,Phone,Country,Address,CartId")] OrderDetails order)
+        {
+            var cart = (ShoppingCart)Session["ShoppingCart"];
+            var items = cart.CartItems;
+            cart.CartItems = null; 
+            db.ShoppingCarts.Add(cart); 
+            await db.SaveChangesAsync();
+            
+            foreach(var item in items)
+            {
+                db.Products.Attach(item.Product);
+                item.ShoppingCart = cart;
+                item.CartId = cart.CartId;
+                db.Carts.Add(item); 
+                await db.SaveChangesAsync(); 
+            }
+
+            cart.CartItems = items;
+            db.Entry<ShoppingCart>(cart).State = EntityState.Modified;
+            order.ShoppingCart = cart;
+            order.CartId = cart.CartId;
+            order.Date = DateTime.Now;
+            await db.SaveChangesAsync(); 
+            if(!ModelState.IsValid)
+                return View(order);
+
+            db.Orders.Add(order);
+            await db.SaveChangesAsync();
+            ViewBag.Message = "Check out successfully";
+            return RedirectToAction("Index");
+        }
+
     }
 }

@@ -393,6 +393,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Migrations\AdminMigration\201911012319455_Initial.cs" />
+    <Compile Include="Migrations\AdminMigration\201911012319455_Initial.Designer.cs">
+      <DependentUpon>201911012319455_Initial.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\AdminMigration\Configuration.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\IdentityConfig.cs" />
@@ -413,12 +418,8 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201910271000408_Initial.cs" />
-    <Compile Include="Migrations\201910271000408_Initial.Designer.cs">
-      <DependentUpon>201910271000408_Initial.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\ProductConfiguration.cs" />
-    <Compile Include="Migrations\UserConfiguration.cs" />
+    <Compile Include="Initializer\AdminUser.cs" />
+    <Compile Include="Initializer\CategoryInitializer.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Controllers\CategoriesController.cs" />
     <Compile Include="Models\AddProducts.cs" />
@@ -433,6 +434,15 @@
     <Compile Include="Models\ProductModel.cs" />
     <Compile Include="Controllers\ProductsController.cs" />
     <Compile Include="Models\UserModel.cs" />
+    <Compile Include="Migrations\ProductMigration\201911012325106_ProductModel.cs" />
+    <Compile Include="Migrations\ProductMigration\201911012325106_ProductModel.Designer.cs">
+      <DependentUpon>201911012325106_ProductModel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\ProductMigration\Configuration.cs" />
+    <Compile Include="ProductMigration\201911012344126_Country.cs" />
+    <Compile Include="ProductMigration\201911012344126_Country.Designer.cs">
+      <DependentUpon>201911012344126_Country.cs</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -479,6 +489,7 @@
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\carousel.css" />
+    <Content Include="Content\cover.css" />
     <Content Include="Content\dashboard.css" />
     <Content Include="Content\grid.css" />
     <Content Include="Content\jQuery.FileUpload\css\jquery.fileupload-noscript.css" />
@@ -700,10 +711,11 @@
     <Content Include="Views\Categories\AddProducts.cshtml" />
     <Content Include="Views\Categories\DetailsCategory.cshtml" />
     <Content Include="Views\Categories\DeleteAddProduct.cshtml" />
+    <Content Include="Views\Store\ListCart.cshtml" />
+    <Content Include="Views\Store\Checkout.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="ProductImages\" />
-    <Folder Include="Views\Shop\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -723,8 +735,14 @@
     <TypeScriptCompile Include="Scripts\index.d.ts" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201910271000408_Initial.resx">
-      <DependentUpon>201910271000408_Initial.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\AdminMigration\201911012319455_Initial.resx">
+      <DependentUpon>201911012319455_Initial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\ProductMigration\201911012325106_ProductModel.resx">
+      <DependentUpon>201911012325106_ProductModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ProductMigration\201911012344126_Country.resx">
+      <DependentUpon>201911012344126_Country.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

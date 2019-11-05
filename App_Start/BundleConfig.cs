@@ -34,11 +34,6 @@ namespace EC
             bundles.Add(new ScriptBundle("~/Scripts/bundle").Include(
                       "~/Scripts/bundle.js"));
 
-
-
-
-
-
             bundles.Add(new ScriptBundle("~/Scripts/multiselect").Include(
                      "~/Scripts/bootstrap-select-dropdown.js"));
 
@@ -65,7 +60,7 @@ namespace EC
                       "~/Content/dashboard.css"));
 
             bundles.Add(new StyleBundle("~/Content/navbar").Include(
-                     "~/Content/navbar.css"));
+                     "~/Content/navbar.css","~/Content/cover.css"));
 
             bundles.Add(new StyleBundle("~/Content/grid").Include(
                     "~/Content/grid.css"));

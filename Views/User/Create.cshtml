@@ -4,13 +4,12 @@
 @{
     ViewBag.Title = "Create";
     Layout = "~/Views/Shared/_Layout.cshtml";
-   var Email = (string) Session["Email"];
+    var Email = (string) Session["Email"];
 }
 
 
 
-
-@using (Html.BeginForm("Create", null, FormMethod.Post, new { enctype = "multipart/form-data" }))
+@using (Html.BeginForm("Create","User", FormMethod.Post))
 {
     @Html.AntiForgeryToken()
 
@@ -21,7 +20,7 @@
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <div class="form-group">
             <div class="col-md-10">
-                <input type="hidden" name="Email" value="@Email" />
+                <input type="hidden" value="@Email" name="Email" />
                 @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
             </div>
         </div>

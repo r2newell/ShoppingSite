@@ -7,8 +7,11 @@
     ViewBag.Title = "Index";
     Layout = "~/Views/Admin/Shared/_AdminLayout.cshtml";
 }
-
-
+    <script type="text/javascript">
+        $("#SelectAll").click(function () {
+            $('input:checkbox').not(this).prop('checked', this.checked);
+        });
+    </script>
 <hr />
 <p class="text-right">
         @using (Html.BeginForm("Index", "Products", FormMethod.Get))
@@ -20,51 +23,54 @@
 </p>
  <hr />
 
-    <table class="table table-dark table-hover table-responsive" style="margin-top: 1em; ">
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.First().ProductName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.First().Quantity)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.First().Price)
-            </th>
-            <th>
-                @Html.ActionLink("Sort by Name", "Index", new { SortOrder = ViewBag.SortOrder, Search = ViewBag.Search, PageNumber = Model.PageNumber }, new { @class = "text-white", @style = "text-decoration:none;" })
-            </th>
-            <th>
-                @Html.ActionLink("Sort by Date", "Index", new { SortOrder = ViewBag.SortOrder, Search = ViewBag.Search, PageNumber = Model.PageNumber }, new { @class = "text-white", @style = "text-decoration:none;" })
-            </th>
+ <table class="table table-dark table-hover table-responsive" style="margin-top: 1em; ">
+     <tr>
+         <th>
+             @Html.DisplayNameFor(model => model.First().ProductName)
+         </th>
+         <th>
+             @Html.DisplayNameFor(model => model.First().Quantity)
+         </th>
+         <th>
+             @Html.DisplayNameFor(model => model.First().Price)
+         </th>
+     </tr>
+
+ 
+         @foreach (var item in Model)
+         {
+             <tr>
+                 <td>
+                     @Html.DisplayFor(modelItem => item.ProductName)
+                 </td>
+                 <td>
+                     @Html.DisplayFor(modelItem => item.Quantity)
+                 </td>
+                 <td>
+                     @Html.DisplayFor(modelItem => item.Price)
+                 </td>
+                 <td>
+                     @Html.ActionLink("Edit", "Edit", new { id = item.ProductId }, new { @class = "text-white", @style = "text-decoration:none;" }) |
+                     @Html.ActionLink("Details", "Details", new { id = item.ProductId }, new { @class = "text-white", @style = "text-decoration:none;" }) |
+                     @Html.ActionLink("Delete", "Delete", new { id = item.ProductId }, new { @class = "text-white", @style = "text-decoration:none;" }) |
+                     @Html.ActionLink("Categories", "DetailsCategory", "Categories", new { Id = item.ProductId }, new { @class = "text-white", @style = "text-decoration:none;" })
+                 </td>
+             </tr>
+         }
+
+         <tr>  
+             <td>@Html.ActionLink("Sort by Date", "Index", new { SortOrder = ViewBag.DateSort, Search = ViewBag.Search, PageNumber = Model.PageNumber }, new { @class = "text-white", @style = "text-decoration:none;" })</td>
+             <td>@Html.ActionLink("Sort by Name", "Index", new { SortOrder = ViewBag.SortOrder, Search = ViewBag.Search, PageNumber = Model.PageNumber }, new { @class = "text-white", @style = "text-decoration:none;" }) </td>
         </tr>
 
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ProductName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Quantity)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Price)
-                </td>
-                <td>
-                    @Html.ActionLink("Edit", "Edit", new { id = item.ProductId }) |
-                    @Html.ActionLink("Details", "Details", new { id = item.ProductId }) |
-                    @Html.ActionLink("Delete", "Delete", new { id = item.ProductId }) |
-                    @Html.ActionLink("Categories", "DetailsCategory", "Categories", new { Id = item.ProductId }, null)
-                </td>
-            </tr>
-        }
-    </table>
+     
+ </table>
     <p>
         <div class="btn btn-primary white ">@Html.ActionLink("Create New", "Create") </div>
     </p>
-
     <div>
 
         @Html.PagedListPager(Model, page => Url.Action("Index", new { PageNumber = page, SortOrder = ViewBag.CurrentSort, Search = ViewBag.Search }))
     </div>
+
+    

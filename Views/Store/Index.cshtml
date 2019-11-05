@@ -8,24 +8,18 @@
 }
 
 
-    
-
-
-
-
-
-
-
+<hr />
 @Styles.Render("~/Content/grid")
 <hr />
+
 @using (Html.BeginForm("Index", "Store", FormMethod.Get, null))
 {
     <div class="row">
         <div class="col-sm-4 mb-3">
-            @Html.TextBox("Search", null, new { @class = "form-control form-control-sm form-control-dark", @placeholder = "search by product name" })
+            @Html.TextBox("Search", null, new { @class = "form-control form-control-sm form-control-dark", @placeholder = "search by product name or description" })
             <br />
-            <input type="submit" value="Search" class="btn btn-outline-secondary btn-sm" />
-            <button class="btn btn-outline-secondary btn-sm" type="button" data-toggle="collapse" aria-controls="collapseThree" aria-expanded="false" data-target="#collapseThree"  >Search Options</button>
+            <input type="submit" value="Search" class="btn btn-outline-secondary btn-sm text-white" />
+            <button class="btn btn-outline-secondary text-white btn-sm" type="button" data-toggle="collapse" aria-controls="collapseThree" aria-expanded="false" data-target="#collapseThree"  >Search Options</button>
         </div>
         <div class="col collapse"   id="collapseThree">
             <div class="row">
@@ -52,10 +46,10 @@
                 </div>
                 <div class="col-sm-auto">
                     <ul class="list-group accordion" id="option">
-                        <li class="list-group-item btn btn-outline-dark" role="button"  data-toggle="collapse" aria-expanded="false" aria-controls="collapseOne" data-target="#collapseOne">Sort Price</li>
+                        <li class="list-group-item btn btn-outline-dark" role="button" data-toggle="collapse" aria-expanded="false" aria-controls="collapseOne" data-target="#collapseOne">Sort Price</li>
                         <div id="collapseOne" class="collapse" data-parent="#option">
-                            <li class="list-group-item list-group-item-action"><input type="radio" class="form-check-input form-check" value="Price_Descending" name="Price" /> Lowest - Highest</li>
-                            <li class="list-group-item list-group-item-action"><input type="radio" class="form-check-input" value="Price_Ascending" name="Price" /> Highest - Lowest</li>
+                            <li class="list-group-item list-group-item-action"><input type="radio" class="form-check-input"  value="0" name="Price" /> Lowest - Highest</li>
+                            <li class="list-group-item list-group-item-action"><input type="radio" class="form-check-input" value="1" name="Price" /> Highest - Lowest</li>
                         </div>
                         <li class="list-group-item btn btn-outline-dark" role="button" data-toggle="collapse" aria-expanded="false" aria-controls="collapseTwo" data-target="#collapseTwo">Sort Name</li>
                         <div id="collapseTwo" class="collapse collapsing" data-parent="#option">
@@ -69,22 +63,25 @@
     </div>
 }
 <hr />
+
 <div class="row">
     @foreach (var product in Model)
     {
-        <div class="col-sm-3">
+        <div class="col-sm-3 mb-sm-3">
             <div class="card bg-dark text-white">
                 <div class="card-header ">
                     @product.ProductName
                 </div>
-                <img src="@Url.Content(product.ImagePath)" class="img-fluid img-thumbnail rounded" />
+                <img src="@Url.Content(product.ImagePath)" style="width:350px; height:250px;" class="img-fluid img-thumbnail rounded card-img" />
                 <div class="card-body ">
-                    @Html.ActionLink("View", "AddToCart",  new { id = product.ProductId}, new { @class="btn btn-primary form-control"})
+                    @Html.ActionLink("View", "AddToCart",  new { id = product.ProductId}, new { @class="btn btn-danger form-control"})
                 </div>
             </div> 
         </div>
     }
 </div>
+ 
+<div>
    @Html.PagedListPager(Model, page => Url.Action("Index", new { PageNumber = page, Name = ViewBag.Name, Price = ViewBag.Price,Search = ViewBag.Search, min = ViewBag.Min, max = ViewBag.max }))
 </div>
 

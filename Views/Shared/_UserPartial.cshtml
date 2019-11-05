@@ -1,7 +1,12 @@
 ﻿@using EC.Models;
 
-@if(Session["User"]!= null)
+
+@if (Session["User"] != null)
 {
     var user = (User)Session["User"];
     <div class="text-white"> Bonjour  @user.FirstName @user.LastName!  </div>
+}
+else
+{
+   <div class="text-white">@User.Identity.Name</div>
 }

@@ -42,7 +42,7 @@ namespace EC.Models
         [NotMapped]
         public List<int> category { get; set; }
 
-
+      
         [Display(Name = "Price")]
         [Required]
         [DataType(DataType.Currency)]

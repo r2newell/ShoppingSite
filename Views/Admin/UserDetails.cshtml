@@ -31,8 +31,9 @@
         </table>
     </div>
     <p>
+        @Html.ActionLink("Back to List", "ListUsers", null, new { @class = "btn btn-primary" })|
         @Html.ActionLink("Edit", "EditUser", new { Email = Model.Email }, new { @class = "btn btn-primary white" })|
-        @Html.ActionLink("Edit Roles", "AddRoles", new { Email = Model.Email },new { @class = "btn btn-primary white" })|
-        @Html.ActionLink("Remove Roles", "RemoveRoles",new { Email = Model.Email },new { @class = "btn btn-primary white" })
+        @Html.ActionLink("Edit Roles", "AddRoles", new { Email = Model.Email }, new { @class = "btn btn-primary white" })|
+        @Html.ActionLink("Remove Roles", "RemoveRoles", new { Email = Model.Email }, new { @class = "btn btn-primary white" })
     </p>
 

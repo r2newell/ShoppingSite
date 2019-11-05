@@ -6,6 +6,7 @@ using System.Data.Entity;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 
 namespace EC.Models
@@ -21,8 +22,8 @@ namespace EC.Models
         public ActionResult Index(string SortOrder, int? PageNumber, string Search)
         {
             ViewBag.CurrentSort = SortOrder;
-            ViewBag.SortOrder = string.IsNullOrEmpty(SortOrder) ? "Descending" : string.Empty;
-            ViewBag.DateSort = string.IsNullOrEmpty(SortOrder) ? "Date Ascending" : string.Empty;
+            ViewBag.SortOrder = SortOrder == "Ascending"? "Descending" : "Ascending";
+            ViewBag.DateSort = string.IsNullOrEmpty(SortOrder)? "Date Ascending" : SortOrder;
             ViewBag.Search = Search;
             var products = from m in db.Products select m;
 
@@ -47,19 +48,20 @@ namespace EC.Models
                     products = products.OrderByDescending(m => m.Date);
                     break;
             }
+
             int page = (PageNumber ?? 1);
             return View(products.ToPagedList(page, PageSize));
         }
 
         [Authorize(Roles = "Administrator,Employee,Manager")]
         [HttpGet]// GET: Products/Details/5
-        public ActionResult Details(int? id)
+        public async Task<ActionResult> Details(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Product product = db.Products.Find(id);
+            Product product = await db.Products.FindAsync(id);
             if (product == null)
             {
                 return HttpNotFound();
@@ -70,10 +72,10 @@ namespace EC.Models
 
         [Authorize(Roles = "Manager,Administrator")]
         // GET: Products/Create
-        public ActionResult Create()
+        public async Task<ActionResult> Create()
         {
-            Session["categories"] = db.Categories.ToDictionary(m => m.CategoryID);
-            ViewBag.Categories = Session["categories"];
+
+            ViewBag.Categories = await db.Categories.ToDictionaryAsync(m => m.CategoryID);
             return View();
         }
 
@@ -82,36 +84,35 @@ namespace EC.Models
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ProductId,ProductName,Description,Quantity,category,Price,ImageFile")] Product product)
+        public async Task<ActionResult> Create([Bind(Include = "ProductId,ProductName,Description,Quantity,category,Price,ImageFile")] Product product)
         {
-            var dictionary = (Dictionary<int, Category>)Session["categories"];
-            if (ModelState.IsValid)
+            if (ModelState.IsValid && product.category.Count != 0)
             {
                 product.Categories = new List<Category>();
-                foreach (var category in product.category)
-                {
-                    product.Categories.Add(dictionary[category]);
-                }
+
+                foreach (var category in product.category)    
+                    product.Categories.Add(db.Categories.Find(category));
+                
                 product.Date = DateTime.Now;
                 product.ImagePath = SaveImage(product);
                 db.Products.Add(product);
-                db.SaveChanges();
-                Session.Remove("categories");
+                await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
-            ViewBag.Categories = dictionary;
+            ViewBag.Categories = await db.Categories.ToDictionaryAsync(m => m.CategoryID);
+            ModelState.AddModelError("", "Category Can not be null.");
             return View(product);
         }
 
         [Authorize(Roles = "Administrator,Manager")]
         // GET: Products/Edit/5
-        public ActionResult Edit(int? id)
+        public async Task<ActionResult> Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Product product = db.Products.Find(id);
+            Product product = await db.Products.FindAsync(id);
             if (product == null)
             {
                 return HttpNotFound();
@@ -124,7 +125,7 @@ namespace EC.Models
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ProductId,Product_name,Product_description,Product_quantity,Price,ImagePath,ImageFile")] Product product)
+        public async Task<ActionResult> Edit([Bind(Include = "ProductId,ProductName,Description,Quantity,category,Price,ImagePath,ImageFile")] Product product)
         {
             if (ModelState.IsValid)
             {
@@ -134,9 +135,11 @@ namespace EC.Models
                     product.ImagePath = null;
                     product.ImagePath = SaveImage(product);
                 }
+                
+                product.Date = DateTime.Now;
                 db.Products.Add(product);
                 db.Entry(product).State = EntityState.Modified;
-                db.SaveChanges();
+                await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
             return View(product);
@@ -144,13 +147,13 @@ namespace EC.Models
 
         [Authorize(Roles = "Administrator,Manager")]
         // GET: Products/Delete/5
-        public ActionResult Delete(int? id)
+        public async Task<ActionResult> Delete(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Product product = db.Products.Find(id);
+            Product product = await db.Products.FindAsync(id);
 
             if (product == null)
             {
@@ -159,12 +162,29 @@ namespace EC.Models
             return View(product);
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> DeleteSelected(List<int> ProductID)
+        {
+            
+                if(ProductID.Count != 0)
+                {
+                    foreach(var id in ProductID)
+                    {
+                        db.Products.Remove(await db.Products.FindAsync(id)); 
+                    
+                    }
+                }
+            
+            await db.SaveChangesAsync(); 
+            return RedirectToAction("Index"); 
+        }
         // POST: Products/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        public async Task<ActionResult> DeleteConfirmed(int id)
         {
-            Product product = product = db.Products.Find(id);
+            Product product = product =  await db.Products.FindAsync(id);
             DeleteImage(product);
             product.ImagePath = null;
             db.Products.Remove(product);

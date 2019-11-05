@@ -4,6 +4,7 @@ using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using EC.Models.Context;
@@ -46,13 +47,13 @@ namespace EC.Models
         }
 
         [Authorize(Roles = "Administrator,Employee,Manager")]// GET: Categories/Details/5
-        public ActionResult Details(int? id)
+        public async Task<ActionResult> Details(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Category category = db.Categories.Find(id);
+            Category category = await db.Categories.FindAsync(id);
             if (category == null)
             {
                 return HttpNotFound();
@@ -72,12 +73,12 @@ namespace EC.Models
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "CategoryID,Description")] Category category)
+        public  async Task<ActionResult> Create([Bind(Include = "CategoryID,Description")] Category category)
         {
             if (ModelState.IsValid)
             {
                 db.Categories.Add(category);
-                db.SaveChanges();
+                await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
 
@@ -86,13 +87,13 @@ namespace EC.Models
 
         [Authorize(Roles = "Administrator,Manager")]
         // GET: Categories/Edit/5
-        public ActionResult Edit(int? id)
+        public async Task<ActionResult> Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Category category = db.Categories.Find(id);
+            Category category = await db.Categories.FindAsync(id);
             if (category == null)
             {
                 return HttpNotFound();
@@ -105,12 +106,12 @@ namespace EC.Models
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "CategoryID,Description")] Category category)
+        public async Task<ActionResult> Edit([Bind(Include = "CategoryID,Description")] Category category)
         {
             if (ModelState.IsValid)
             {
                 db.Entry(category).State = EntityState.Modified;
-                db.SaveChanges();
+               await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
             return View(category);
@@ -118,13 +119,13 @@ namespace EC.Models
 
         [Authorize(Roles = "Administrator,Manager")]
         // GET: Categories/Delete/5
-        public ActionResult Delete(int? id)
+        public async Task<ActionResult> Delete(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Category category = db.Categories.Find(id);
+            Category category = await db.Categories.FindAsync(id);
             if (category == null)
             {
                 return HttpNotFound();
@@ -135,19 +136,19 @@ namespace EC.Models
         // POST: Categories/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        public async Task<ActionResult> DeleteConfirmed(int id)
         {
-            Category category = db.Categories.Find(id);
+            Category category = await db.Categories.FindAsync(id);
             db.Categories.Remove(category);
-            db.SaveChanges();
+            await db.SaveChangesAsync();
             return RedirectToAction("Index");
         }
 
         [Authorize(Roles = "Administrator,Manager")]
-        public ActionResult AddProducts()
+        public async Task<ActionResult> AddProducts()
         {
             var categories = from m in db.Categories select m;
-            Session["categories"] = categories.ToDictionary(m => m.CategoryID);
+            Session["categories"] = await categories.ToDictionaryAsync(m => m.CategoryID);
             Session["products"] = db.Products.Include(m => m.Categories).ToDictionary(m => m.ProductId);
             ViewData["ProductId"] = new SelectList(items: db.Products, dataValueField: "ProductId", dataTextField: "ProductName");
             return View();
@@ -156,7 +157,7 @@ namespace EC.Models
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult AddProducts([Bind(Include = "ID,categories")]AddProducts category)
+        public async Task<ActionResult> AddProducts([Bind(Include = "ID,categories")]AddProducts category)
         {
             ViewData["ProductId"] = new SelectList(items: db.Products, dataValueField: "ProductId", dataTextField: "ProductName");
             if (!ModelState.IsValid)
@@ -164,7 +165,7 @@ namespace EC.Models
             
             
             var categories = (Dictionary<int, Category>)Session["categories"];
-            var product = db.Products.Find(category.ID);
+            var product = await db.Products.FindAsync(category.ID);
             if (product.Categories == null)
                 product.Categories = new List<Category>();
             
@@ -173,6 +174,7 @@ namespace EC.Models
             {
                 Category output = null;
                 categories.TryGetValue(index, out output);
+                db.Categories.Attach(output);
                 if (product.Categories.Contains(output) == false)
                     product.Categories.Add(output);
                 
@@ -181,7 +183,7 @@ namespace EC.Models
             Session.Remove("products");
             Session.Remove("categories");
             db.Entry(product).State = EntityState.Modified;
-            db.SaveChanges();
+            await db.SaveChangesAsync();
             return RedirectToAction("Index");
         }
 
@@ -196,7 +198,7 @@ namespace EC.Models
         
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteAddProduct([Bind(Include = "ID,categories")]AddProducts category)
+        public async Task<ActionResult> DeleteAddProduct([Bind(Include = "ID,categories")]AddProducts category)
         {
             var product = db.Products.Include(m=> m.Categories).First(m => m.ProductId == category.ID);
             if(!ModelState.IsValid)
@@ -210,7 +212,7 @@ namespace EC.Models
               
            
             db.Entry(product).State = EntityState.Modified;
-            db.SaveChanges();
+            await db.SaveChangesAsync();
             return RedirectToAction("Index", "Products");
         }
 

@@ -10,7 +10,7 @@ using System.Web.Mvc;
 using PagedList;
 using System.Collections.Generic;
 
-namespace EC.Controllers
+namespace EC.Controllers 
 {
     [Authorize(Roles = "Administrator,Employee,Manager")]
     public class AdminController : Controller
@@ -93,16 +93,16 @@ namespace EC.Controllers
             return View(user.ToPagedList(page, PageSize));
         }
 
-        public ActionResult UserDetails(string Email)
+        public  async Task<ActionResult> UserDetails(string Email)
         {
-            User user = UserContext.users.Find(Email);
+            User user = await UserContext.users.FindAsync(Email);
             if (user == null)
                 return RedirectToAction("CreateUserDetails",  new { Email = Email });
             return View(user); 
         }
-        public ActionResult EditUser(string Email)
+        public async Task<ActionResult> EditUser(string Email)
         {
-            User user = UserContext.users.Find(Email);
+            User user = await UserContext.users.FindAsync(Email);
             if(user == null)
             {
                 return RedirectToAction("CreateUserDetails", new { Email = Email });
@@ -112,12 +112,12 @@ namespace EC.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult EditUser([Bind(Include = "Email,FirstName,LastName,Dob")]User model)
+        public async Task<ActionResult> EditUser([Bind(Include = "Email,FirstName,LastName,Dob")]User model)
         {
             if (ModelState.IsValid)
             {
                 UserContext.users.Add(model);
-                UserContext.SaveChanges();
+                await  UserContext.SaveChangesAsync();
                 return RedirectToAction("UserDetails");
             }
             return View(model);
@@ -157,11 +157,11 @@ namespace EC.Controllers
         }
 
 
-        public ActionResult RemoveRoles(string Email)
+        public async Task<ActionResult> RemoveRoles(string Email)
         {
             Initialize();
-            var user = manager.FindByEmail(Email);
-            ViewBag.roles = manager.GetRoles(user.Id);
+            var user = await manager.FindByEmailAsync(Email);
+            ViewBag.roles = await manager.GetRolesAsync(user.Id);
             ViewBag.Email = Email;
             return View();
         }
@@ -175,7 +175,7 @@ namespace EC.Controllers
                 return View();
             
             Initialize();
-            var user = manager.FindByEmail(model.Email);
+            var user = await manager.FindByEmailAsync(model.Email);
             await  manager.RemoveFromRolesAsync(user.Id, model.Roles.ToArray());
             return RedirectToAction("ListUsers");
         }
@@ -189,15 +189,19 @@ namespace EC.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult CreateUserDetails([Bind(Include = "Email,FirstName,LastName,Dob")]User model)
+        public async Task<ActionResult> CreateUserDetails([Bind(Include = "Email,FirstName,LastName,Dob")]User model)
         {
+            
             if(ModelState.IsValid)
             {
-                Session["User"] = model;
+                if(User.Identity.Name == model.Email)
+                    Session["User"] = model; 
+
                 UserContext.users.Add(model);
-                UserContext.SaveChanges();
+                await UserContext.SaveChangesAsync();
                 return RedirectToAction("ListUsers");
             }
+
             return View(model);
         }
 
@@ -210,13 +214,13 @@ namespace EC.Controllers
         
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult ChangePassword([Bind(Include = "Email,OldPassword,Password,PasswordConfirmation")]ChangePassword model)
+        public async Task<ActionResult> ChangePassword([Bind(Include = "Email,OldPassword,Password,PasswordConfirmation")]ChangePassword model)
         {
             if (!ModelState.IsValid)
                 return View(model);
 
             Initialize();
-            var user = manager.FindByEmail(model.Email);
+            var user = await manager.FindByEmailAsync(model.Email);
             manager.ChangePassword(user.Id, model.OldPassword, model.Password);
             return RedirectToAction("ListUsers");
         }
@@ -229,11 +233,11 @@ namespace EC.Controllers
         [ActionName("DeleteUser")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteUserConfirmed(string Email)
+        public async Task<ActionResult> DeleteUserConfirmed(string Email)
         {
             Initialize();
-            manager.Delete(manager.FindByEmail(Email));
-            var user = UserContext.users.Find(Email);
+            manager.Delete(await manager.FindByEmailAsync(Email));
+            var user = await UserContext.users.FindAsync(Email);
             if(user != null)
                 UserContext.users.Remove(user);
             UserContext.SaveChanges();

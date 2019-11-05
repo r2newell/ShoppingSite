@@ -55,10 +55,10 @@
                     @Html.DisplayFor(modelItem => item.UserName)
                 </td>
                 <td>
-                    @Html.ActionLink("Edit", "EditUser", new { Email = item.Email }) |
-                    @Html.ActionLink("Details", "UserDetails", new { Email = item.Email }) |
-                    @Html.ActionLink("Delete", "DeleteUser", new { Email = item.Email })|
-                    @Html.ActionLink("Change Password", "ChangePassword", new { Email = item.Email }, null)
+                    @Html.ActionLink("Edit", "EditUser", new { Email = item.Email },new { @class = "text-white", @style="text-decoration:none;" }) |
+                    @Html.ActionLink("Details", "UserDetails", new { Email = item.Email },new { @class = "text-white", @style="text-decoration:none;" }) |
+                    @Html.ActionLink("Delete", "DeleteUser", new { Email = item.Email },new { @class = "text-white", @style="text-decoration:none;" })|
+                    @Html.ActionLink("Change Password", "ChangePassword", new { Email = item.Email }, new { @class = "text-white", @style="text-decoration:none;" })
                 </td>
             </tr>
         }

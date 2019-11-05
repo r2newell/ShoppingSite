@@ -56,10 +56,10 @@
 </div>
 }
 
-<div class="btn btn-primary white">
-    @Html.ActionLink("Back to List", "ListUsers")|
-    @Html.ActionLink("Edit Roles", "AddRoles", new { Email = Email })|
-    @Html.ActionLink("Remove", "RemoveRoles", new { Email = Email })
+<div>
+    @Html.ActionLink("Back to List", "ListUsers", null, new { @class="btn btn-primary"})|
+    @Html.ActionLink("Edit Roles", "AddRoles", new { Email = Email }, new { @class="btn btn-primary"})|
+    @Html.ActionLink("Remove", "RemoveRoles", new { Email = Email }, new { @class="btn btn-primary"})
 </div>
 
 @section Scripts {

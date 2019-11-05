@@ -1,20 +1,22 @@
-namespace EC.Migrations
+namespace EC.ProductMigration
 {
     using EC.Models;
+    using EC.Models.Context;
     using System;
     using System.Collections.Generic;
     using System.Data.Entity;
     using System.Data.Entity.Migrations;
     using System.Linq;
 
-    internal sealed class ProductConfiguration : DbMigrationsConfiguration<EC.Models.Context.ProductContext>
+    internal sealed class Configuration : DbMigrationsConfiguration<EC.Models.Context.ProductContext>
     {
-        public ProductConfiguration()
+        public Configuration()
         {
             AutomaticMigrationsEnabled = false;
+            MigrationsDirectory = @"ProductMigration";
         }
 
-        protected override void Seed(EC.Models.Context.ProductContext context)
+        protected override void Seed(ProductContext context)
         {
             var categories = new List<Category>
             {
@@ -34,12 +36,8 @@ namespace EC.Migrations
                 new Category{ Description = "Office Supplies"}
             };
 
-            context.Categories.AddOrUpdate(categories.ToArray());
+            context.Categories.AddRange(categories.ToArray());
             context.SaveChanges();
-            //  This method will be called after migrating to the latest version.
-
-            //  You can use the DbSet<T>.AddOrUpdate() helper extension method 
-            //  to avoid creating duplicate seed data.
         }
     }
 }

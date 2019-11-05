@@ -1,0 +1,53 @@
+﻿@model EC.Models.ShoppingCart
+
+@{
+    ViewBag.Title = "ListCart";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script type="text/javascript">
+
+    function selectAll() {
+        document.getElementsByName("Delete").
+
+    }
+
+</script>
+ <br />
+ <table class="table table-responsive table-dark table-hover">
+
+     <tr>
+         <td>
+             Product Name
+         </td>
+         <td>
+             Quantity
+         </td>
+         <td>
+             Price
+         </td>
+         <td>
+             Total
+         </td>
+     </tr>
+
+     @if (Model.CartItems != null)
+     {
+         foreach (var item in Model.CartItems)
+         {
+             <tr>
+                 <td>@item.Product.ProductName</td>
+                 <td>@item.Quantity</td>
+                 <td>@item.Product.Price</td>
+                 <td>@item.Total</td>
+             </tr>
+
+
+         }
+
+         <tr><td>Total</td><td colspan="3" class="text-right" style="text-decoration:double;text-decoration-color:white">@Html.DisplayFor(model => Model.Total) </td></tr>
+         <tr><td colspan="4" class="text-right">@Html.ActionLink("Check Out","CheckOut",null,new { @class="btn btn-danger text-white"}) </td></tr>
+     }
+ </table>
+
+    

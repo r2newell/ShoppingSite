@@ -4,18 +4,18 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - Romario Newell Shopping Site</title>
+
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/Scripts/bootstrap")
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/Scripts/popper")
-
     @Styles.Render("~/Content/navbar")
     @Scripts.Render("~/bundles/modernizr")
     @Scripts.Render("~/Scripts/multiselect")
     @Scripts.Render("~/Scripts/multiselect-min")
     @Styles.Render("~/Content/PagedList")
     @Scripts.Render("~/Scripts/bundle")
-    @Scripts.Render("~/bundles/jquery")
+
 
 
 
@@ -41,6 +41,11 @@
             <ul class="navbar-nav mr-auto">
                 @Html.ActionLink("Home", "Index", "Home", new { area = "" }, new { @class = "nav-item nav-link active" })
                 @Html.ActionLink("Store", "Index", "Store", new { area = ""}, new { @class = "nav-item nav-link active" })
+                @if (User.IsInRole("Administrator"))
+                {
+                   @Html.ActionLink("Admin", "Index", "Admin", new { area = ""}, new { @class = "nav-item nav-link active" })
+                }
+
                 @Html.Partial("_LoginPartial")
 
                 <li class="dropdown">
@@ -52,13 +57,14 @@
                 </li>
                 <li>@Html.Partial("_SettingsPartial")</li>
             </ul>
+            @Html.ActionLink("View Cart", "ListCart","Store", null, new { @class = "nav-item nav-link active text-white" })
         </div>
         @Html.Partial("_UserPartial")
     </nav>
     <div class="container body-content">
         @RenderBody()
         <hr />
-        <footer>
+        <footer class="text-white">
             <p>&copy; @DateTime.Now.Year - Romario Newell</p>
         </footer>
     </div>

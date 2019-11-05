@@ -1,24 +1,19 @@
-namespace EC.Migrations
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Data.Entity;
+using EC.Models;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
+
+namespace EC.Initializer
 {
-    using EC.Models;
-    using Microsoft.AspNet.Identity;
-    using Microsoft.AspNet.Identity.EntityFramework;
-    using System;
-    using System.Collections.Generic;
-    using System.Data.Entity;
-    using System.Data.Entity.Migrations;
-    using System.Linq;
-
-    internal sealed class UserConfiguration : DbMigrationsConfiguration<EC.Models.ApplicationDbContext>
+    public class AdminUser : DropCreateDatabaseAlways<ApplicationDbContext>
     {
-        public UserConfiguration()
+        protected override void Seed(ApplicationDbContext context)
         {
-            AutomaticMigrationsEnabled = false;
-        }
-
-        protected override void Seed(EC.Models.ApplicationDbContext context)
-        {
-            var user = new  ApplicationUser{ Email = "newell-romario@hotmail.com", EmailConfirmed = true, UserName = "newell-romario@hotmail.com"};
+            var user = new ApplicationUser { Email = "newell-romario@hotmail.com", EmailConfirmed = true, UserName = "newell-romario@hotmail.com" };
             var manager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
             manager.Create(user, "Pa$$word1!");
             context.Users.Add(user);
@@ -36,17 +31,16 @@ namespace EC.Migrations
             AddRoles(roles, rolemanager);
             manager.AddToRole(user.Id, "Administrator");
             context.SaveChanges();
+            base.Seed(context);
         }
 
         public void AddRoles(List<string> roles, RoleManager<IdentityRole> manager)
         {
-
-
             foreach (string role in roles)
             {
                 if (manager.RoleExists(role) == false)
-                   manager.Create(new IdentityRole { Name = role });
-                
+                    manager.Create(new IdentityRole { Name = role });
+
             }
         }
     }
