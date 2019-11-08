@@ -6,6 +6,9 @@
 }
 
  <br />
+<hr />
+    <p>@ViewBag.Stock</p>
+<hr />
  <table class="table table-responsive table-dark table-hover">
 
      <tr>
@@ -30,11 +33,16 @@
              <tr>
                  <td>@item.Product.ProductName</td>
                  <td>@item.Quantity</td>
-                 <td>@item.Product.Price</td>
-                 <td>@item.Total</td>
+                 <td>@Html.DisplayFor(model => item.Product.Price)</td>
+                 <td>@Html.DisplayFor(model => item.Total)</td>
              </tr>
          }
-         <tr><td>Total</td><td colspan="3" class="text-right" style="text-decoration:double;text-decoration-color:white">@Html.DisplayFor(model => Model.Total) </td></tr>
-         <tr><td colspan="4" class="text-right">@Html.ActionLink("Check Out","CheckOut",null,new { @class="btn btn-danger text-white"}) </td></tr>
+
+     }
+     <tr><td>Total</td><td colspan="3" class="text-right" style="text-decoration:double;text-decoration-color:white">@Html.DisplayFor(model => Model.Total) </td></tr>
+     @if (Model.CartItems != null)
+     {
+         <tr><td colspan="4" class="text-right">@Html.ActionLink("Check Out", "CheckOut", null, new { @class = "btn btn-danger text-white" }) </td></tr>
+
      }
  </table>

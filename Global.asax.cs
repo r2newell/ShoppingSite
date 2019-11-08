@@ -10,7 +10,7 @@ using System.Web.Optimization;
 using System.Web.Routing;
 using System.Web.Security;
 using System.Web.SessionState;
-using EC.Initializer; 
+
 
 namespace EC
 {

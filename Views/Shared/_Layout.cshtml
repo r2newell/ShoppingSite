@@ -40,10 +40,10 @@
         <div class="collapse navbar-collapse" id="navbarsExample03">
             <ul class="navbar-nav mr-auto">
                 @Html.ActionLink("Home", "Index", "Home", new { area = "" }, new { @class = "nav-item nav-link active" })
-                @Html.ActionLink("Store", "Index", "Store", new { area = ""}, new { @class = "nav-item nav-link active" })
+                @Html.ActionLink("Store", "Index", "Store", new { area = "" }, new { @class = "nav-item nav-link active" })
                 @if (User.IsInRole("Administrator"))
                 {
-                   @Html.ActionLink("Admin", "Index", "Admin", new { area = ""}, new { @class = "nav-item nav-link active" })
+                    @Html.ActionLink("Admin", "Index", "Admin", new { area = "" }, new { @class = "nav-item nav-link active" })
                 }
 
                 @Html.Partial("_LoginPartial")
@@ -56,8 +56,10 @@
                     </div>
                 </li>
                 <li>@Html.Partial("_SettingsPartial")</li>
+
             </ul>
-            @Html.ActionLink("View Cart", "ListCart","Store", null, new { @class = "nav-item nav-link active text-white" })
+      
+            <a class="nav-item nav-link active" href="@Url.Action("ListCart", "Store")"><span><img src="~/Icons/cart.svg" style="width:1.5em;"/></span></a>
         </div>
         @Html.Partial("_UserPartial")
     </nav>

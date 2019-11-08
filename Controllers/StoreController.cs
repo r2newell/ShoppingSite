@@ -9,7 +9,7 @@ using System.Web.Mvc;
 using EC.Models;
 using EC.Models.Context;
 using System.Threading.Tasks;
-
+using Bia.Countries.Iso3166; 
 namespace EC.Controllers
 {
     public class StoreController : Controller
@@ -137,7 +137,7 @@ namespace EC.Controllers
         public ActionResult ListCart()
         {
             var cart = (ShoppingCart)Session["ShoppingCart"];
-            if(cart != null)
+            if (cart != null)
                 return View(cart);
 
             return View(new ShoppingCart());
@@ -146,6 +146,7 @@ namespace EC.Controllers
 
         public ActionResult Checkout()
         {
+            ViewBag.Countries = new SelectList(Countries.GetAllShortNames(), "shortName");
             return View();
         }
 
@@ -154,37 +155,57 @@ namespace EC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> CheckOut([Bind(Include = "Email,OrderNumber,FirstName,LastName,Date,Phone,Country,Address,CartId")] OrderDetails order)
         {
-            if (!ModelState.IsValid)
-                return View(order);
 
+            if (!ModelState.IsValid)
+            {
+                ViewBag.Countries = new SelectList(Countries.GetAllShortNames(), "shortName");
+                return View(order);
+            }
+
+   
 
             var cart = (ShoppingCart)Session["ShoppingCart"];
-            
+            bool OutOfStock = false;
+
+            foreach (var item in cart.CartItems)
+            {
+                item.Product = await db.Products.FindAsync(item.ProductId);
+                if (item.Quantity > item.Product.Quantity)
+                {
+                    cart.CartItems.Remove(item);
+                    OutOfStock = true;
+                }
+            }
+            if (OutOfStock == true)
+            {
+                Session["ShoppingCart"] = cart;
+                ViewBag.Stock = "Some of the items on the cart became out of stock while you were shopping. Oops!!!"; 
+                return RedirectToAction("ListCart"); 
+            }
+
             var items = cart.CartItems;
-            cart.CartItems = null; 
-           // db.ShoppingCarts.Add(cart); 
-           // await db.SaveChangesAsync();
+            cart.CartItems = null;
+            db.ShoppingCarts.Add(cart);
+            await db.SaveChangesAsync(); 
             
 
-            /*foreach(var item in items)
+            foreach(var item in items)
             {
-                db.Products.Attach(item.Product);
+                item.Product.Quantity -= item.Quantity;  
+                db.Entry(item.Product).State = EntityState.Modified;
                 item.ShoppingCart = cart;
                 item.CartId = cart.CartId;
                 db.Carts.Add(item); 
                 await db.SaveChangesAsync(); 
-            }*/
+            }
 
-           // cart.CartItems = items;
-
-
+            cart.CartItems = items;
             db.Entry<ShoppingCart>(cart).State = EntityState.Modified;
+            await db.SaveChangesAsync();
+
             order.ShoppingCart = cart;
             order.CartId = cart.CartId;
             order.Date = DateTime.Now;
-            await db.SaveChangesAsync(); 
-            
-
             db.Orders.Add(order);
             await db.SaveChangesAsync();
             ViewBag.Message = "Check out successfully";

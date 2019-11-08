@@ -81,10 +81,18 @@ namespace EC.Models
         [Required]
         public string Country { get; set; }
 
+        [Display(Name = "Street Address 1")]
         [Required]
         public string Address { get; set; }  
         
+        [Display(Name = "Street Address 2")]
+        [Required]
+        public string Address2 { get; set; }
         
+        [Display(Name = "City")]
+        [Required]
+        public string City { get; set; }
+
         public int CartId { get; set; }
         public ShoppingCart ShoppingCart { get; set; }
     }
