@@ -6,7 +6,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
     var user = (User)Session["User"];
     var cart = (ShoppingCart)Session["ShoppingCart"];
-    var Email = User.Identity.Name;
+    var Email = (string)Session["Email"];
 }
 
 

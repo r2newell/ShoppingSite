@@ -9,6 +9,7 @@ using System.Web;
 using System.Web.Mvc;
 using PagedList;
 using System.Collections.Generic;
+using System.Net;
 
 namespace EC.Controllers 
 {
@@ -241,6 +242,15 @@ namespace EC.Controllers
             if(user != null)
                 UserContext.users.Remove(user);
             UserContext.SaveChanges();
+            Session["User"] = null;
+            
+            if (User.Identity.Name == Email)
+            {  
+                HttpContext.GetOwinContext().Authentication.SignOut(DefaultAuthenticationTypes.ApplicationCookie); 
+                return RedirectToAction("Index", "Home");
+            } 
+
+
             return RedirectToAction("ListUsers");
         }
 

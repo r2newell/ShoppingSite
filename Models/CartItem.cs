@@ -49,7 +49,7 @@ namespace EC.Models
         [DataType(DataType.Currency)]
         [Required]
         public double Total { get; set;}
-        public DateTime Date { get; set; }
+        public DateTime Date { get; set;}
     }
 
     public class OrderDetails
@@ -84,7 +84,7 @@ namespace EC.Models
         [Required]
         public string Address { get; set; }  
         
-        [Required]
+        
         public int CartId { get; set; }
         public ShoppingCart ShoppingCart { get; set; }
     }

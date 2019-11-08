@@ -63,7 +63,7 @@ namespace EC.Controllers
         }
 
         //
-        // POST: /Account/Login
+        // POST: /Account/Login-+-+
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -75,8 +75,9 @@ namespace EC.Controllers
             {
                 return View(model);
             }
-          //  else if (SignInManager.UserManager.FindByEmail(model.Email).EmailConfirmed == false)
-           //   return View(model);
+           
+            if(SignInManager.UserManager.FindByEmail(model.Email).EmailConfirmed == false)
+              return View(model);
 
 
 

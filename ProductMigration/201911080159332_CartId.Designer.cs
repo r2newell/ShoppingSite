@@ -7,13 +7,13 @@ namespace EC.ProductMigration
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.2.0-61023")]
-    public sealed partial class Country : IMigrationMetadata
+    public sealed partial class CartId : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(Country));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(CartId));
         
         string IMigrationMetadata.Id
         {
-            get { return "201911012344126_Country"; }
+            get { return "201911080159332_CartId"; }
         }
         
         string IMigrationMetadata.Source

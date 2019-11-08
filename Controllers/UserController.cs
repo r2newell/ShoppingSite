@@ -37,7 +37,7 @@ namespace EC.Controllers
         // GET: User/Create
         public ActionResult Create()
         {
-            return View();
+            return View(new User() { Email = (string)Session["Email"]});
         }
 
         // POST: User/Create
@@ -108,7 +108,7 @@ namespace EC.Controllers
             var manager = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
             HttpContext.GetOwinContext().Authentication.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
             manager.Delete(await manager.FindByEmailAsync(Email));
-            Session["User"] = null;
+            Session.Remove("User");
             return RedirectToAction("Index", "Home", null);
         }
 

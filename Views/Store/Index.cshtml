@@ -1,6 +1,6 @@
 ﻿@using PagedList.Mvc;
 @model  PagedList.IPagedList<EC.Models.Product>
-
+@using EC.Models;
 
 @{
     ViewBag.Title = "Product";
@@ -15,22 +15,22 @@
 @using (Html.BeginForm("Index", "Store", FormMethod.Get, null))
 {
     <div class="row">
-        <div class="col-sm-4 mb-3">
-            @Html.TextBox("Search", null, new { @class = "form-control form-control-sm form-control-dark", @placeholder = "search by product name or description" })
+        <div class="col-sm-3 mb-3">
+            @Html.TextBox("Search", null, new { @class = "form-control form-control-sm form-control-dark", @placeholder = "search" })
             <br />
             <input type="submit" value="Search" class="btn btn-outline-secondary btn-sm text-white" />
             <button class="btn btn-outline-secondary text-white btn-sm" type="button" data-toggle="collapse" aria-controls="collapseThree" aria-expanded="false" data-target="#collapseThree"  >Search Options</button>
         </div>
         <div class="col collapse"   id="collapseThree">
             <div class="row">
-                <div class="col mb-3">
+                <div class="col mb-3 small">
                     <div class="input-group input-group-sm">
                         <div class="input-group-prepend">
                             <span class="input-group-text">$</span>
                         </div>
                         <input type="number" class="form-control form-control-sm" name="min" value="0.00" step="0.01" min="0.00">
                         <div class="input-group-append">
-                            <span class="input-group-text"></span>
+                            <span class="input-group-text">.00</span>
                         </div>
                         <div class="input-group-prepend">
                             <span class="input-group-text">$</span>
@@ -41,20 +41,37 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-sm-auto mb-3">
-                    @Html.DropDownList("Filter", (SelectList)ViewBag.Categories, new { @class = "form-control form-control-sm" })
+                <div class="col-md-auto mb-1">
+                    <select name="Filter" class="form-control form-control-sm" data-role="select-dropdown" multiple required>
+                        @{
+                            int counter = 0;
+                            List<int> filter = (List<int>)ViewBag.Filter;
+                            foreach (var category in (List<Category>)ViewBag.Categories)
+                            {
+                                if (filter!= null && filter.Count != 0 && filter.Count != counter && category.CategoryID == filter[counter])
+                                {
+                                    <option value="@category.CategoryID" selected>@category.Description</option>
+                                     counter++;
+                                }
+                                else
+                                {
+                                    <option value="@category.CategoryID">@category.Description</option>
+                                }
+                            }
+                        }
+                    </select>
                 </div>
-                <div class="col-sm-auto">
-                    <ul class="list-group accordion" id="option">
-                        <li class="list-group-item btn btn-outline-dark" role="button" data-toggle="collapse" aria-expanded="false" aria-controls="collapseOne" data-target="#collapseOne">Sort Price</li>
+                <div class="col-sm-auto small">
+                    <ul class="list-group accordion list" id="option">
+                        <li class="list-group-item btn btn-outline-dark text-sm-center small" role="button" data-toggle="collapse" aria-expanded="false" aria-controls="collapseOne" data-target="#collapseOne">Sort Price</li>
                         <div id="collapseOne" class="collapse" data-parent="#option">
-                            <li class="list-group-item list-group-item-action"><input type="radio" class="form-check-input"  value="0" name="Price" /> Lowest - Highest</li>
-                            <li class="list-group-item list-group-item-action"><input type="radio" class="form-check-input" value="1" name="Price" /> Highest - Lowest</li>
+                            <li class="list-group-item list-group-item-action text-sm-left"><input type="radio" class="form-check-input"  value="0" name="Price" /> Lowest - Highest</li>
+                            <li class="list-group-item list-group-item-action text-sm-left"><input type="radio" class="form-check-input" value="1" name="Price" /> Highest - Lowest</li>
                         </div>
-                        <li class="list-group-item btn btn-outline-dark" role="button" data-toggle="collapse" aria-expanded="false" aria-controls="collapseTwo" data-target="#collapseTwo">Sort Name</li>
+                        <li class="list-group-item btn btn-outline-dark text-sm-center small" role="button" data-toggle="collapse" aria-expanded="false" aria-controls="collapseTwo" data-target="#collapseTwo">Sort Name</li>
                         <div id="collapseTwo" class="collapse collapsing" data-parent="#option">
-                            <li class="list-group-item list-group-item-action"><input type="radio" class="form-check-input" value="Name_Ascending" name="Name" /> Ascending</li>
-                            <li class="list-group-item list-group-item-action"><input type="radio" class="form-check-input" value="Name_Descending" name="Name" /> Descending</li>
+                            <li class="list-group-item list-group-item-action text-sm-left"><input type="radio" class="form-check-input" value="Name_Ascending" name="Name" /> Ascending</li>
+                            <li class="list-group-item list-group-item-action text-sm-left"><input type="radio" class="form-check-input" value="Name_Descending" name="Name" /> Descending</li>
                         </div>
                     </ul>
                 </div>

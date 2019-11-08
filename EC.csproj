@@ -418,8 +418,6 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Initializer\AdminUser.cs" />
-    <Compile Include="Initializer\CategoryInitializer.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Controllers\CategoriesController.cs" />
     <Compile Include="Models\AddProducts.cs" />
@@ -439,9 +437,9 @@
       <DependentUpon>201911012325106_ProductModel.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\ProductMigration\Configuration.cs" />
-    <Compile Include="ProductMigration\201911012344126_Country.cs" />
-    <Compile Include="ProductMigration\201911012344126_Country.Designer.cs">
-      <DependentUpon>201911012344126_Country.cs</DependentUpon>
+    <Compile Include="ProductMigration\201911080159332_CartId.cs" />
+    <Compile Include="ProductMigration\201911080159332_CartId.Designer.cs">
+      <DependentUpon>201911080159332_CartId.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
@@ -741,8 +739,8 @@
     <EmbeddedResource Include="Migrations\ProductMigration\201911012325106_ProductModel.resx">
       <DependentUpon>201911012325106_ProductModel.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ProductMigration\201911012344126_Country.resx">
-      <DependentUpon>201911012344126_Country.cs</DependentUpon>
+    <EmbeddedResource Include="ProductMigration\201911080159332_CartId.resx">
+      <DependentUpon>201911080159332_CartId.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
