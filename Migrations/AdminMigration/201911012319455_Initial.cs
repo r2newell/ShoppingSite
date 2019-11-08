@@ -1,4 +1,4 @@
-namespace EC.AdminMigration
+namespace EC.Migrations.AdminMigration
 {
     using System;
     using System.Data.Entity.Migrations;

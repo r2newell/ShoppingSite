@@ -1,4 +1,4 @@
-namespace EC.ProductMigration
+namespace EC.Migrations.ProductMigration
 {
     using System;
     using System.Data.Entity.Migrations;

@@ -1,4 +1,4 @@
-namespace EC.ProductMigration
+namespace EC.Migrations.ProductMigration
 {
     using EC.Models;
     using EC.Models.Context;

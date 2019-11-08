@@ -443,12 +443,12 @@
       <DependentUpon>201911012325106_ProductModel.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\ProductMigration\Configuration.cs" />
-    <Compile Include="ProductMigration\201911080159332_CartId.cs" />
-    <Compile Include="ProductMigration\201911080159332_CartId.Designer.cs">
+    <Compile Include="Migrations\ProductMigration\201911080159332_CartId.cs" />
+    <Compile Include="Migrations\ProductMigration\201911080159332_CartId.Designer.cs">
       <DependentUpon>201911080159332_CartId.cs</DependentUpon>
     </Compile>
-    <Compile Include="ProductMigration\201911080502333_Address2.cs" />
-    <Compile Include="ProductMigration\201911080502333_Address2.Designer.cs">
+    <Compile Include="Migrations\ProductMigration\201911080502333_Address2.cs" />
+    <Compile Include="Migrations\ProductMigration\201911080502333_Address2.Designer.cs">
       <DependentUpon>201911080502333_Address2.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -750,10 +750,10 @@
     <EmbeddedResource Include="Migrations\ProductMigration\201911012325106_ProductModel.resx">
       <DependentUpon>201911012325106_ProductModel.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ProductMigration\201911080159332_CartId.resx">
+    <EmbeddedResource Include="Migrations\ProductMigration\201911080159332_CartId.resx">
       <DependentUpon>201911080159332_CartId.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ProductMigration\201911080502333_Address2.resx">
+    <EmbeddedResource Include="Migrations\ProductMigration\201911080502333_Address2.resx">
       <DependentUpon>201911080502333_Address2.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>

@@ -1,4 +1,4 @@
-namespace EC.AdminMigration
+namespace EC.Migrations.AdminMigration
 {
     using EC.Models;
     using Microsoft.AspNet.Identity;
