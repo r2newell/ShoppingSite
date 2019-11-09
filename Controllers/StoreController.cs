@@ -212,5 +212,25 @@ namespace EC.Controllers
             return RedirectToAction("Index");
         }
 
+        [Authorize]
+        public ActionResult Orders(string Email, int? search, int? PageNumber)
+        {
+            var orders = db.Orders.AsQueryable();
+            orders = orders.Where(m => m.Email == Email);
+ 
+            ViewBag.Search = search;
+            if(search != null)
+            {
+                orders = orders.Where(m => m.OrderNumber == search);
+                PageNumber = 1;
+            }
+
+
+            
+
+            orders =  orders.OrderByDescending(m => m.Date);
+            return View(orders.ToPagedList(PageNumber ?? 1, PageSize));
+        }
+
     }
 }

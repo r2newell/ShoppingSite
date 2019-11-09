@@ -5,6 +5,7 @@
     <li class="nav-item dropdown">
         <a class="nav-link active" href="#" id="dropdown03" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img src="~/Icons/cogwheel.png" style="width: 1em;" /></a>
         <div class="dropdown-menu" aria-labelledby="dropdown03">
+            @Html.ActionLink("Purchase History", "Orders", "Store", new { Email = User.Identity.Name}, new { @class = "dropdown-item" } )
             @Html.ActionLink("Profile Details", "Details", "User", null, new { @class = "dropdown-item" })
             @Html.ActionLink("Manage Acount", "Index", "Manage",null,new { @class = "dropdown-item" })
             

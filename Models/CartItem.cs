@@ -44,6 +44,7 @@ namespace EC.Models
     
         public int CartId { get; set; }
 
+        [Display(Name = "Items")]
         public List<CartItem> CartItems { get; set; }
 
         [DataType(DataType.Currency)]

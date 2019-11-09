@@ -722,6 +722,7 @@
     <Content Include="Views\Categories\DeleteAddProduct.cshtml" />
     <Content Include="Views\Store\ListCart.cshtml" />
     <Content Include="Views\Store\Checkout.cshtml" />
+    <Content Include="Views\Store\Orders.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="ProductImages\" />
